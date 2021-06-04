@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Novalia", "Novalia.csproj", "{08B52B51-028A-43D3-94BD-4CA6BC362DCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08B52B51-028A-43D3-94BD-4CA6BC362DCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08B52B51-028A-43D3-94BD-4CA6BC362DCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08B52B51-028A-43D3-94BD-4CA6BC362DCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08B52B51-028A-43D3-94BD-4CA6BC362DCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8BA4B7CA-1C86-4D80-B866-0C02ADE62B0C}
+	EndGlobalSection
+EndGlobal
