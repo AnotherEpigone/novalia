@@ -1,4 +1,5 @@
-﻿using Novalia.Ui;
+﻿using Novalia.Serialization.Settings;
+using Novalia.Ui;
 using Novalia.Ui.Controls;
 using SadConsole;
 using SadConsole.UI;
@@ -12,11 +13,13 @@ namespace Novalia
     {
         private readonly IUiManager _uiManager;
         private readonly IGameManager _gameManager;
+        private readonly IAppSettings _appSettings;
 
-        public Novalia(IUiManager uiManager, IGameManager gameManager)
+        public Novalia(IUiManager uiManager, IGameManager gameManager, IAppSettings appSettings)
         {
             _uiManager = uiManager;
             _gameManager = gameManager;
+            _appSettings = appSettings;
         }
 
         public void Run()
@@ -42,16 +45,15 @@ namespace Novalia
             InitControls();
 
             Settings.ResizeMode = Settings.WindowResizeOptions.None;
-            // Settings.FullScreenPreventScaleChangeForNone = true;
 
-            //if (_appSettings.FullScreen)
-            //{
-            //    _uiManager.ToggleFullScreen();
-            //}
-            //else
-            //{
-            //    _uiManager.SetViewport(_appSettings.Viewport.width, _appSettings.Viewport.height);
-            //}
+            if (_appSettings.FullScreen)
+            {
+                _uiManager.ToggleFullScreen();
+            }
+            else
+            {
+                _uiManager.SetViewport(_appSettings.Viewport.width, _appSettings.Viewport.height);
+            }
 
             _uiManager.ShowMainMenu(_gameManager);
         }

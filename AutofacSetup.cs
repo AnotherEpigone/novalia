@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Novalia.Serialization.Settings;
 using Novalia.Ui;
 
 namespace Novalia
@@ -23,9 +24,9 @@ namespace Novalia
             ////    .As<ILogManager>()
             ////    .SingleInstance();
 
-            ////builder.RegisterType<AppSettings>()
-            ////    .As<IAppSettings>()
-            ////    .SingleInstance();
+            builder.RegisterType<AppSettings>()
+                .As<IAppSettings>()
+                .SingleInstance();
 
             builder.RegisterType<Novalia>().AsSelf();
             return builder.Build();

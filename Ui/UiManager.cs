@@ -1,4 +1,5 @@
-﻿using Novalia.Ui.Consoles;
+﻿using Novalia.Serialization.Settings;
+using Novalia.Ui.Consoles;
 using SadConsole;
 using SadRogue.Primitives;
 
@@ -6,6 +7,13 @@ namespace Novalia.Ui
 {
     public sealed class UiManager : IUiManager
     {
+        private readonly IAppSettings _appSettings;
+
+        public UiManager(IAppSettings appSettings)
+        {
+            _appSettings = appSettings;
+        }
+
         public int ViewPortWidth { get; private set; } = 160; // 160 x 8 = 1280
         public int ViewPortHeight { get; private set; } = 45; // 45 x 16 = 720
 
@@ -34,18 +42,29 @@ namespace Novalia.Ui
 
         public void SetViewport(int width, int height)
         {
-            throw new System.NotImplementedException();
+            Game.Instance.ResizeWindow(width, height);
+
+            RefreshViewport();
         }
 
         public void ShowMainMenu(IGameManager gameManager)
         {
-            var menu = new MainMenuConsole(this, gameManager, ViewPortWidth, ViewPortHeight);
+            var menu = new MainMenuConsole(this, gameManager, _appSettings, ViewPortWidth, ViewPortHeight);
             Game.Instance.Screen = menu;
         }
 
         public void ToggleFullScreen()
         {
-            throw new System.NotImplementedException();
+            Game.Instance.ToggleFullScreen();
+            Game.Instance.MonoGameInstance.ResetRendering();
+
+            RefreshViewport();
+        }
+
+        private void RefreshViewport()
+        {
+            ViewPortWidth = SadConsole.Host.Global.GraphicsDevice.PresentationParameters.BackBufferWidth / Game.Instance.DefaultFont.GetFontSize(Font.Sizes.One).X;
+            ViewPortHeight = SadConsole.Host.Global.GraphicsDevice.PresentationParameters.BackBufferHeight / Game.Instance.DefaultFont.GetFontSize(Font.Sizes.One).Y;
         }
     }
 }
