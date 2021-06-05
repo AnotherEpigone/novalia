@@ -1,8 +1,10 @@
 ﻿using Novalia.Ui;
 using Novalia.Ui.Controls;
 using SadConsole;
+using SadConsole.UI;
 using SadConsole.UI.Controls;
 using SadConsole.UI.Themes;
+using static SadConsole.UI.Colors;
 
 namespace Novalia
 {
@@ -58,22 +60,25 @@ namespace Novalia
         {
             var colors = Library.Default.Colors;
 
-            ////colors.Title = ColorHelper.TextBright;
-            ////colors.Text = ColorHelper.Text;
-            ////colors.TextSelected = ColorHelper.TextBright;
-            ////colors.TextSelectedDark = ColorHelper.TextBright;
-            ////colors.TextLight = ColorHelper.SelectedBackground;
-            ////colors.TextDark = ColorHelper.TextBright;
-            ////colors.TextFocused = ColorHelper.TextBright;
+            colors.Title = new AdjustableColor(ColorHelper.TextBright, "Title", colors);
+            colors.Lines = new AdjustableColor(colors.Gray, "Lines", colors);
 
-            ////colors.Lines = colors.Gray;
+            colors.ControlForegroundNormal = new AdjustableColor(ColorHelper.Text, "Control Foreground Normal", colors);
+            colors.ControlForegroundDisabled = new AdjustableColor(colors.Gray, "Control Foreground Disabled", colors);
+            colors.ControlForegroundMouseOver = new AdjustableColor(ColorHelper.TextBright, "Control Foreground MouseOver", colors);
+            colors.ControlForegroundMouseDown = new AdjustableColor(ColorHelper.TextBright, "Control Foreground MouseDown", colors);
+            colors.ControlForegroundSelected = new AdjustableColor(ColorHelper.TextBright, "Control Foreground Selected", colors);
+            colors.ControlForegroundFocused = new AdjustableColor(ColorHelper.TextBright, "Control Foreground Focused", colors);
 
-            ////colors.ControlBack = ColorHelper.ControlBack;
-            ////colors.ControlBackLight = ColorHelper.SelectedBackground;
-            ////colors.ControlBackSelected = ColorHelper.SelectedBackground;
-            ////colors.ControlBackDark = ColorHelper.ControlBack;
-            ////colors.ControlHostBack = ColorHelper.ControlBack;
-            ////colors.ControlHostFore = ColorHelper.Text;
+            colors.ControlBackgroundNormal = new AdjustableColor(ColorHelper.ControlBack, "Control Background Normal", colors);
+            colors.ControlBackgroundDisabled = new AdjustableColor(ColorHelper.ControlBack, "Control Background Disabled", colors);
+            colors.ControlBackgroundMouseOver = new AdjustableColor(ColorHelper.SelectedBackground, "Control Background MouseOver", colors) { Brightness = Brightness.Dark };
+            colors.ControlBackgroundMouseDown = new AdjustableColor(ColorHelper.SelectedBackground, "Control Background MouseDown", colors);
+            colors.ControlBackgroundSelected = new AdjustableColor(ColorHelper.SelectedBackground, "Control Background Selected", colors);
+            colors.ControlBackgroundFocused = new AdjustableColor(ColorHelper.SelectedBackground, "Control Background Focused", colors) { Brightness = Brightness.Dark };
+
+            colors.ControlHostForeground = new AdjustableColor(ColorHelper.Text, "Control Host Foreground", colors);
+            colors.ControlHostBackground = new AdjustableColor(ColorHelper.ControlBack, "Control Host Background", colors);
 
             colors.RebuildAppearances();
         }
@@ -82,7 +87,8 @@ namespace Novalia
         {
             var buttonTheme = new ButtonTheme
             {
-                ShowEnds = false,
+                LeftEndGlyph = 4,
+                RightEndGlyph = 4,
             };
 
             Library.Default.SetControlTheme(typeof(McSelectionButton), buttonTheme);

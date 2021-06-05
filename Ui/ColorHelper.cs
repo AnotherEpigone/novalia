@@ -1,5 +1,4 @@
-﻿using SadConsole.UI;
-using SadRogue.Primitives;
+﻿using SadRogue.Primitives;
 
 namespace Novalia.Ui
 {
@@ -24,7 +23,7 @@ namespace Novalia.Ui
         public static Color ControlBack => DarkWood;
         public static Color ControlBackDark => DarkWood2;
         public static Color Text => BayeuxParchment;
-        public static AdjustableColor TextBright => new AdjustableColor(BayeuxParchment2, nameof(TextBright));
+        public static Color TextBright => BayeuxParchment2;
         public static Color SelectedBackground => DarkGrey2;
         public static Color EnemyName => EnemyRed;
         public static Color ImportantAction => ActionYellow;
@@ -55,34 +54,6 @@ namespace Novalia.Ui
         public static Color ActionYellow => new Color(157, 113, 0);
         public static Color StoryBlue => BayeuxLightBlue;
         public static Color ItemGrey => Color.DarkGray;
-
-
-        public static Colors GetThemeColorsForBackgroundColor(Color bgColor)
-        {
-            throw new System.NotImplementedException();
-            //var colors = Library.Default.Colors.Clone();
-
-            //colors.ControlBack = bgColor;
-            //colors.ControlBackLight = bgColor;
-            //colors.ControlBackDark = bgColor;
-            //colors.ControlHostBack = bgColor;
-
-            //colors.RebuildAppearances();
-
-            //return colors;
-        }
-
-        public static Colors GetProgressBarThemeColors(Color back, Color fore)
-        {
-            throw new System.NotImplementedException();
-            //var colors = Library.Default.Colors.Clone();
-
-            //// todo set the things here
-
-            //colors.RebuildAppearances();
-
-            //return colors;
-        }
 
         public static string GetParserString(string text, Color color)
         {

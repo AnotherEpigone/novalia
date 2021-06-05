@@ -41,7 +41,6 @@ namespace Novalia.Ui
         {
             var menu = new MainMenuConsole(this, gameManager, ViewPortWidth, ViewPortHeight);
             Game.Instance.Screen = menu;
-            menu.IsFocused = true;
         }
 
         public void ToggleFullScreen()
