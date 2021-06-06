@@ -15,7 +15,7 @@ namespace Novalia.Ui
 
         MainConsole CreateMapScreen(
             IGameManager gameManager,
-            Font tilesetFont);
+            IFont tilesetFont);
 
         void ToggleFullScreen();
 

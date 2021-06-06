@@ -20,7 +20,7 @@ namespace Novalia.Ui
         public string TileFontPath { get; } = "Fonts\\tiles.font";
         public string TileFontName { get; } = "Tiles";
 
-        public MainConsole CreateMapScreen(IGameManager gameManager, Font tilesetFont)
+        public MainConsole CreateMapScreen(IGameManager gameManager, IFont tilesetFont)
         {
             throw new System.NotImplementedException();
         }
@@ -56,15 +56,14 @@ namespace Novalia.Ui
         public void ToggleFullScreen()
         {
             Game.Instance.ToggleFullScreen();
-            Game.Instance.MonoGameInstance.ResetRendering();
 
             RefreshViewport();
         }
 
         private void RefreshViewport()
         {
-            ViewPortWidth = SadConsole.Host.Global.GraphicsDevice.PresentationParameters.BackBufferWidth / Game.Instance.DefaultFont.GetFontSize(Font.Sizes.One).X;
-            ViewPortHeight = SadConsole.Host.Global.GraphicsDevice.PresentationParameters.BackBufferHeight / Game.Instance.DefaultFont.GetFontSize(Font.Sizes.One).Y;
+            ViewPortWidth = SadConsole.Host.Global.GraphicsDevice.PresentationParameters.BackBufferWidth / Game.Instance.DefaultFont.GetFontSize(IFont.Sizes.One).X;
+            ViewPortHeight = SadConsole.Host.Global.GraphicsDevice.PresentationParameters.BackBufferHeight / Game.Instance.DefaultFont.GetFontSize(IFont.Sizes.One).Y;
         }
     }
 }

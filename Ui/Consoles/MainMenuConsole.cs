@@ -83,6 +83,7 @@ namespace Novalia.Ui.Consoles
             {
                 if (appSettings.FullScreen)
                 {
+                    appSettings.FullScreen = !appSettings.FullScreen;
                     uiManager.ToggleFullScreen();
                 }
 
@@ -100,6 +101,7 @@ namespace Novalia.Ui.Consoles
             {
                 if (appSettings.FullScreen)
                 {
+                    appSettings.FullScreen = !appSettings.FullScreen;
                     uiManager.ToggleFullScreen();
                 }
 
@@ -117,6 +119,7 @@ namespace Novalia.Ui.Consoles
             {
                 if (appSettings.FullScreen)
                 {
+                    appSettings.FullScreen = !appSettings.FullScreen;
                     uiManager.ToggleFullScreen();
                 }
 
