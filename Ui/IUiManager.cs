@@ -1,4 +1,5 @@
-﻿using Novalia.Ui.Consoles;
+﻿using Novalia.Maps;
+using Novalia.Ui.Consoles;
 using SadConsole;
 using SadRogue.Primitives;
 
@@ -14,8 +15,7 @@ namespace Novalia.Ui
         void ShowMainMenu(IGameManager gameManager);
 
         MainConsole CreateMapScreen(
-            IGameManager gameManager,
-            IFont tilesetFont);
+            WorldMap map);
 
         void ToggleFullScreen();
 

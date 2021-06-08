@@ -14,4 +14,8 @@
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TheSadRogue.Integration\TheSadRogue.Integration\TheSadRogue.Integration.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
-﻿using SadConsole;
+﻿using Novalia.Maps;
+using SadConsole;
 using System.Diagnostics;
 
 namespace Novalia.Ui.Consoles
@@ -6,8 +7,9 @@ namespace Novalia.Ui.Consoles
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MainConsole : ScreenObject
     {
-        public MainConsole()
+        public MainConsole(WorldMap map)
         {
+            Children.Add(map);
         }
 
         private string DebuggerDisplay

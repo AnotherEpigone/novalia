@@ -1,4 +1,5 @@
-﻿using Novalia.Serialization.Settings;
+﻿using Novalia.Maps;
+using Novalia.Serialization.Settings;
 using Novalia.Ui.Consoles;
 using SadConsole;
 using SadRogue.Primitives;
@@ -20,9 +21,9 @@ namespace Novalia.Ui
         public string TileFontPath { get; } = "Fonts\\tiles.font";
         public string TileFontName { get; } = "Tiles";
 
-        public MainConsole CreateMapScreen(IGameManager gameManager, IFont tilesetFont)
+        public MainConsole CreateMapScreen(WorldMap map)
         {
-            throw new System.NotImplementedException();
+            return new MainConsole(map);
         }
 
         public Point GetCentralWindowSize()
