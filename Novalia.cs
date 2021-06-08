@@ -36,10 +36,10 @@ namespace Novalia
 
         private void Init()
         {
-            //Game.Instance.LoadFont(_uiManager.TileFontPath);
+            Game.Instance.LoadFont(_uiManager.TileFontPath);
             
             // Register the types provided by the SadConsole.Extended library
-            SadConsole.UI.RegistrarExtended.Register();
+            RegistrarExtended.Register();
 
             InitColors();
             InitControls();

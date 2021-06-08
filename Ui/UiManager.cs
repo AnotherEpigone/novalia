@@ -18,8 +18,8 @@ namespace Novalia.Ui
         public int ViewPortWidth { get; private set; } = 160; // 160 x 8 = 1280
         public int ViewPortHeight { get; private set; } = 45; // 45 x 16 = 720
 
-        public string TileFontPath { get; } = "Fonts\\tiles.font";
-        public string TileFontName { get; } = "Tiles";
+        public string TileFontPath { get; } = "Fonts\\world.font";
+        public string TileFontName { get; } = "World";
 
         public MainConsole CreateMapScreen(WorldMap map)
         {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -9,13 +9,22 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="ini-parser" Version="2.5.2" />
-    <PackageReference Include="SadConsole" Version="9.0.0" />
     <PackageReference Include="SadConsole.Extended" Version="9.0.1" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SadConsole\SadConsole\SadConsole.csproj" />
     <ProjectReference Include="..\TheSadRogue.Integration\TheSadRogue.Integration\TheSadRogue.Integration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\world.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\world.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

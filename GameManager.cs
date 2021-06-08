@@ -1,4 +1,5 @@
 ﻿using GoRogue.MapGeneration;
+using Novalia.Fonts;
 using Novalia.Maps;
 using Novalia.Ui;
 using SadConsole;
@@ -34,8 +35,17 @@ namespace Novalia
 
         public void StartNewGame()
         {
-            // dummy map
-            var generator = new Generator(_uiManager.ViewPortWidth, _uiManager.ViewPortHeight)
+            var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
+            var defaultFont = Game.Instance.DefaultFont;
+
+            var tileSizeXFactor = (double)tilesetFont.GlyphWidth / defaultFont.GlyphWidth;
+            var tileSizeYFactor = (double)tilesetFont.GlyphHeight / defaultFont.GlyphHeight;
+
+            var tileWidth = (int)(_uiManager.ViewPortWidth / tileSizeXFactor);
+            var tileHeight = (int)(_uiManager.ViewPortHeight / tileSizeYFactor);
+            //var tileWidth = 10;
+            //var tileHeight = 10;
+            var generator = new Generator(tileWidth, tileHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
                     gen.AddSteps(DefaultAlgorithms.RectangleMapSteps());
@@ -43,12 +53,12 @@ namespace Novalia
 
             var generatedMap = generator.Context.GetFirst<ISettableGridView<bool>>("WallFloor");
 
-            var map = new WorldMap(_uiManager.ViewPortWidth, _uiManager.ViewPortHeight);
+            var map = new WorldMap(tileWidth, tileHeight, tilesetFont);
 
             foreach (var location in map.Positions())
             {
                 bool walkable = generatedMap[location];
-                int glyph = walkable ? '.' : '#';
+                int glyph = walkable ? WorldGlyphAtlas.Terrain_Grassland : WorldGlyphAtlas.Terrain_MapEdge;
                 map.SetTerrain(new RogueLikeCell(location, Color.White, Color.Black, glyph, 0, walkable, walkable));
             }
 
