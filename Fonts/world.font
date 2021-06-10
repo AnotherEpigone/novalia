@@ -1,4 +1,5 @@
 {
+  "$type": "SadConsole.SadFont, SadConsole",
   "FilePath": "world.png",
   "GlyphHeight": 32,
   "GlyphPadding": 0,
