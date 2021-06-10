@@ -1,4 +1,5 @@
 ﻿using GoRogue.MapGeneration;
+using Novalia.Entities;
 using Novalia.Fonts;
 using Novalia.Maps;
 using Novalia.Ui;
@@ -6,16 +7,19 @@ using SadConsole;
 using SadRogue.Integration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using Troschuetz.Random.Generators;
 
 namespace Novalia
 {
     internal sealed class GameManager : IGameManager
     {
         private readonly IUiManager _uiManager;
+        private readonly IEntityFactory _entityFactory;
 
-        public GameManager(IUiManager uiManager)
+        public GameManager(IUiManager uiManager, IEntityFactory entityFactory)
         {
             _uiManager = uiManager;
+            _entityFactory = entityFactory;
         }
 
         public bool CanLoad()
@@ -43,8 +47,6 @@ namespace Novalia
 
             var tileWidth = (int)(_uiManager.ViewPortWidth / tileSizeXFactor);
             var tileHeight = (int)(_uiManager.ViewPortHeight / tileSizeYFactor);
-            //var tileWidth = 10;
-            //var tileHeight = 10;
             var generator = new Generator(tileWidth, tileHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
@@ -60,6 +62,17 @@ namespace Novalia
                 bool walkable = generatedMap[location];
                 int glyph = walkable ? WorldGlyphAtlas.Terrain_Grassland : WorldGlyphAtlas.Terrain_MapEdge;
                 map.SetTerrain(new RogueLikeCell(location, Color.White, Color.Black, glyph, 0, walkable, walkable));
+            }
+
+            var rng = new StandardGenerator();
+            for (int i = 0; i < 50; i++)
+            {
+                var position = map.WalkabilityView.RandomPosition(true, rng);
+                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, Color.PaleVioletRed);
+                map.AddEntity(unit);
+                position = map.WalkabilityView.RandomPosition(true, rng);
+                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, Color.CornflowerBlue);
+                map.AddEntity(unit);
             }
 
             Game.Instance.Screen = _uiManager.CreateMapScreen(map);

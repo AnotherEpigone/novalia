@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Novalia.Entities;
 using Novalia.Serialization.Settings;
 using Novalia.Ui;
 
@@ -15,6 +16,9 @@ namespace Novalia
                 .SingleInstance();
             builder.RegisterType<GameManager>()
                 .As<IGameManager>()
+                .SingleInstance();
+            builder.RegisterType<EntityFactory>()
+                .As<IEntityFactory>()
                 .SingleInstance();
             ////builder.RegisterType<SaveManager>()
             ////    .As<ISaveManager>()
