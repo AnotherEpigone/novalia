@@ -1,5 +1,8 @@
 ﻿using Autofac;
+using log4net;
+using log4net.Config;
 using Novalia.Entities;
+using Novalia.Logging;
 using Novalia.Serialization.Settings;
 using Novalia.Ui;
 
@@ -24,12 +27,22 @@ namespace Novalia
             ////    .As<ISaveManager>()
             ////    .SingleInstance();
 
-            ////builder.RegisterType<LogManager>()
-            ////    .As<ILogManager>()
-            ////    .SingleInstance();
+            builder.RegisterType<Logger>()
+                .As<ILogger>()
+                .SingleInstance();
 
             builder.RegisterType<AppSettings>()
                 .As<IAppSettings>()
+                .SingleInstance();
+
+            //log4net
+            builder.Register(
+                _ =>
+                {
+                    XmlConfigurator.Configure(new System.IO.FileInfo("log4net.config"));
+                    return LogManager.GetLogger(typeof(Novalia));
+                })
+                .As<ILog>()
                 .SingleInstance();
 
             builder.RegisterType<Novalia>().AsSelf();

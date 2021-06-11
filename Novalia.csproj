@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="ini-parser" Version="2.5.2" />
+    <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="SadConsole" Version="9.0.0" />
     <PackageReference Include="SadConsole.Extended" Version="9.0.1" />
     <PackageReference Include="SadConsole.Host.MonoGame" Version="9.0.1" />
@@ -23,6 +24,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Fonts\world.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

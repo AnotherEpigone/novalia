@@ -1,6 +1,7 @@
 ﻿using GoRogue.MapGeneration;
 using Novalia.Entities;
 using Novalia.Fonts;
+using Novalia.Logging;
 using Novalia.Maps;
 using Novalia.Ui;
 using SadConsole;
@@ -15,11 +16,16 @@ namespace Novalia
     {
         private readonly IUiManager _uiManager;
         private readonly IEntityFactory _entityFactory;
+        private readonly ILogger _logger;
 
-        public GameManager(IUiManager uiManager, IEntityFactory entityFactory)
+        public GameManager(
+            IUiManager uiManager,
+            IEntityFactory entityFactory,
+            ILogger logger)
         {
             _uiManager = uiManager;
             _entityFactory = entityFactory;
+            _logger = logger;
         }
 
         public bool CanLoad()
@@ -39,6 +45,7 @@ namespace Novalia
 
         public void StartNewGame()
         {
+            _logger.Debug("Starting new game.");
             var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
             var defaultFont = Game.Instance.DefaultFont;
 
