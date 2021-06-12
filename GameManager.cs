@@ -38,6 +38,11 @@ namespace Novalia
             throw new System.NotImplementedException();
         }
 
+        public void LoadLatest()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Save()
         {
             throw new System.NotImplementedException();

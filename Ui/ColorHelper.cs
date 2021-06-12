@@ -20,9 +20,9 @@ namespace Novalia.Ui
         public static Color DarkGreyHighlight => new Color(100, 100, 100, 100);
 
         // Gui general
-        public static Color ControlBack => DarkWood;
-        public static Color ControlBackDark => DarkWood2;
-        public static Color Text => BayeuxParchment;
+        public static Color ControlBack => new Color(24, 24, 24);
+        public static Color ControlBackDark => new Color(18, 18, 18);
+        public static Color Text => new Color(180, 180, 180);
         public static Color TextBright => BayeuxParchment2;
         public static Color SelectedBackground => DarkGrey2;
         public static Color EnemyName => EnemyRed;

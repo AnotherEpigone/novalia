@@ -6,6 +6,8 @@
 
         void Save();
 
+        void LoadLatest();
+
         void Load();
 
         bool CanLoad();
