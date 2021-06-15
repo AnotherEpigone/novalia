@@ -1,6 +1,7 @@
 ﻿using GoRogue.MapGeneration;
 using Novalia.Entities;
 using Novalia.Fonts;
+using Novalia.GameMechanics;
 using Novalia.Logging;
 using Novalia.Maps;
 using Novalia.Ui;
@@ -77,14 +78,19 @@ namespace Novalia
                 _map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
             }
 
+            // TODO: attach the concrete empires and map to a game object
+            var sudet = new Empire(EmpireAtlas.Sudet);
+            var blackhand = new Empire(EmpireAtlas.BlackhandDominion);
+
             var rng = new StandardGenerator();
             for (int i = 0; i < 50; i++)
             {
                 var position = _map.WalkabilityView.RandomPosition(true, rng);
-                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, Color.PaleVioletRed);
+                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, sudet.Id, Color.PaleVioletRed);
                 _map.AddEntity(unit);
+
                 position = _map.WalkabilityView.RandomPosition(true, rng);
-                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, Color.CornflowerBlue);
+                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, Color.CornflowerBlue);
                 _map.AddEntity(unit);
             }
 

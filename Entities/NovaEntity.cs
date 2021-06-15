@@ -29,6 +29,6 @@ namespace Novalia.Entities
 
         public Guid Id { get; }
 
-        private string DebuggerDisplay => string.Format($"{nameof(NovaEntity)}: {Name}");
+        private string DebuggerDisplay => $"{nameof(NovaEntity)}: {Name}";
     }
 }
