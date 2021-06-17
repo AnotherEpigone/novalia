@@ -6,7 +6,7 @@ namespace Novalia.Entities
 {
     public class EntityFactory : IEntityFactory
     {
-        public NovaEntity CreateUnit(Point position, UnitTemplate template, Guid empireId, Color factionColor)
+        public NovaEntity CreateUnit(Point position, UnitTemplate template, Guid empireId, Color empireColor)
         {
             var unit = new Unit(
                 position,
@@ -16,7 +16,8 @@ namespace Novalia.Entities
                 true,
                 (int)MapEntityLayer.ACTORS,
                 Guid.NewGuid(),
-                empireId);
+                empireId,
+                empireColor);
 
             return unit;
         }

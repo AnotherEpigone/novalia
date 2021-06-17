@@ -1,12 +1,10 @@
 ﻿using GoRogue.MapGeneration;
 using Novalia.Entities;
-using Novalia.Fonts;
 using Novalia.GameMechanics;
 using Novalia.Logging;
 using Novalia.Maps;
 using Novalia.Ui;
 using SadConsole;
-using SadRogue.Integration;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 using Troschuetz.Random.Generators;
@@ -86,11 +84,11 @@ namespace Novalia
             for (int i = 0; i < 50; i++)
             {
                 var position = _map.WalkabilityView.RandomPosition(true, rng);
-                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, sudet.Id, Color.PaleVioletRed);
+                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, sudet.Id, Color.Red);
                 _map.AddEntity(unit);
 
                 position = _map.WalkabilityView.RandomPosition(true, rng);
-                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, Color.CornflowerBlue);
+                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, Color.Blue);
                 _map.AddEntity(unit);
             }
 
