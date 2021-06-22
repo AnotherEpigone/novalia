@@ -1,4 +1,6 @@
-﻿using SadConsole;
+﻿using Novalia.Entities;
+using SadConsole;
+using SadConsole.Input;
 using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
 using System;
@@ -27,14 +29,34 @@ namespace Novalia.Maps
                   Distance.Chebyshev,
                   entityLayersSupportingMultipleItems: GoRogue.SpatialMaps.LayerMasker.DEFAULT.Mask((int)MapEntityLayer.ITEMS, (int)MapEntityLayer.ACTORS, (int)MapEntityLayer.EFFECTS),
                   font: font)
-        { }
-
-        private string DebuggerDisplay
         {
-            get
+            UseMouse = true;
+            base.UseMouse = false;
+        }
+
+        public Unit SelectedUnit { get; private set; }
+
+        public override bool UseMouse { get; set; }
+
+        private string DebuggerDisplay => string.Format($"{nameof(WorldMap)} ({Width}, {Height})");
+
+        protected override bool ProcessMouse(MouseScreenObjectState state)
+        {
+            state = new MouseScreenObjectState(BackingObject, state.Mouse.Clone());
+            if (state.Mouse.LeftClicked)
             {
-                return string.Format($"{nameof(WorldMap)} ({Width}, {Height})");
+                SelectedUnit?.ToggleSelected();
+                SelectedUnit = null;
+
+                var clickedUnit = GetEntityAt<Unit>(state.CellPosition);
+                if (clickedUnit != null)
+                {
+                    clickedUnit.ToggleSelected();
+                    SelectedUnit = clickedUnit;
+                }
             }
+
+            return base.ProcessMouse(state);
         }
     }
 }

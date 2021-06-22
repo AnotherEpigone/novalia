@@ -27,14 +27,14 @@ namespace Novalia.Maps
         public static TerrainTemplate MapEdge => new TerrainTemplate(
             "TERRAIN_MAPEDGE",
             "Map edge",
-            WorldGlyphAtlas.Terrain_MapEdge,
+            GlyphAtlas.Terrain_MapEdge,
             false,
             false);
 
         public static TerrainTemplate Grassland => new TerrainTemplate(
             "TERRAIN_GRASSLAND",
             "Grassland",
-            WorldGlyphAtlas.Terrain_Grassland,
+            GlyphAtlas.Terrain_Grassland,
             true,
             true);
     }

@@ -10,6 +10,8 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
         {
             DefaultBackground = ColorHelper.ControlBack;
 
+            UseMouse = false;
+
             Refresh();
         }
 

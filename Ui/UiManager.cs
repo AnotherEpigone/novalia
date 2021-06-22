@@ -23,7 +23,7 @@ namespace Novalia.Ui
 
         public MainConsole CreateMapScreen(WorldMap map)
         {
-            return new MainConsole(this, map);
+            return new MainConsole(this, map, _appSettings.Debug);
         }
 
         public Point GetCentralWindowSize()

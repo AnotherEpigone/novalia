@@ -1,6 +1,6 @@
 ﻿namespace Novalia.Fonts
 {
-    public static class WorldGlyphAtlas
+    public static class GlyphAtlas
     {
         // Terrain
         public const int Terrain_Grassland = 2;
@@ -11,5 +11,6 @@
 
         // Gui
         public const int UnitBanner = 8;
+        public const int SelectionOverlay = 9;
     }
 }
