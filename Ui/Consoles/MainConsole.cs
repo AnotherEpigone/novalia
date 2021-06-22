@@ -1,9 +1,8 @@
-﻿using Novalia.Entities;
-using Novalia.Maps;
+﻿using Novalia.Maps;
 using Novalia.Ui.Consoles.MainConsoleOverlays;
 using SadConsole;
 using SadConsole.Input;
-using SadRogue.Integration.Components.SadConsole;
+using SadRogue.Primitives;
 using System.Diagnostics;
 
 namespace Novalia.Ui.Consoles
@@ -17,12 +16,23 @@ namespace Novalia.Ui.Consoles
         {
             _map = map;
 
-            var topLeftInfoConsole = new TopLeftInfoConsole(40, 3);
-
             UseMouse = false;
 
+            var empireStatusConsole = new EmpireStatusConsole(40, 5)
+            {
+                Position = new Point(uiManager.ViewPortWidth - 40, 0),
+            };
+
+            var selectionDetailsConsole = new SelectionDetailsConsole(40, 8, _map)
+            {
+                Position = new Point(uiManager.ViewPortWidth - 40, 5),
+            };
+
+            _map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(_map);
+
             Children.Add(_map);
-            Children.Add(topLeftInfoConsole);
+            Children.Add(empireStatusConsole);
+            Children.Add(selectionDetailsConsole);
 
             if (debug)
             {

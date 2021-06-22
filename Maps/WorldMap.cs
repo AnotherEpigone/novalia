@@ -34,7 +34,11 @@ namespace Novalia.Maps
             base.UseMouse = false;
         }
 
+        public event EventHandler SelectionChanged;
+
         public Unit SelectedUnit { get; private set; }
+
+        public Point SelectedPoint { get; private set; }
 
         public override bool UseMouse { get; set; }
 
@@ -45,6 +49,7 @@ namespace Novalia.Maps
             state = new MouseScreenObjectState(BackingObject, state.Mouse.Clone());
             if (state.Mouse.LeftClicked)
             {
+                SelectedPoint = state.CellPosition;
                 SelectedUnit?.ToggleSelected();
                 SelectedUnit = null;
 
@@ -54,6 +59,8 @@ namespace Novalia.Maps
                     clickedUnit.ToggleSelected();
                     SelectedUnit = clickedUnit;
                 }
+
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
             }
 
             return base.ProcessMouse(state);
