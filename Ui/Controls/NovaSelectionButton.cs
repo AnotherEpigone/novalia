@@ -7,24 +7,24 @@ namespace Novalia.Ui.Controls
     /// <summary>
     /// Provides a button-like control that changes focus to a designated previous or next selection button when the arrow keys are pushed.
     /// </summary>
-    public class McSelectionButton : Button
+    public class NovaSelectionButton : Button
     {
         /// <summary>
         /// The selection button to focus when the UP key is pressed or the SelectPrevious() method is called.
         /// </summary>
-        public McSelectionButton PreviousSelection { get; set; }
+        public NovaSelectionButton PreviousSelection { get; set; }
 
         /// <summary>
         /// The selection button to focus when the DOWN key is pressed or the SelectNext() method is called.
         /// </summary>
-        public McSelectionButton NextSelection { get; set; }
+        public NovaSelectionButton NextSelection { get; set; }
 
 
         /// <summary>
         /// Creates a new Selection Button with a specific width and height.
         /// </summary>
         /// <param name="width">The width of the selection button.</param>
-        public McSelectionButton(int width, int height) : base(width, height)
+        public NovaSelectionButton(int width, int height) : base(width, height)
         {
         }
 
@@ -34,7 +34,7 @@ namespace Novalia.Ui.Controls
         /// <param name="nextSelection">The selection button to be used as next.</param>
         /// <param name="setPreviousOnNext">Sets the PreviousSelection property on the <paramref name="nextSelection"/> instance to current selection button. Defaults to true.</param>
         /// <returns></returns>
-        public McSelectionButton SetNextSelection(ref McSelectionButton nextSelection, bool setPreviousOnNext = true)
+        public NovaSelectionButton SetNextSelection(ref NovaSelectionButton nextSelection, bool setPreviousOnNext = true)
         {
             NextSelection = nextSelection;
 
@@ -71,7 +71,7 @@ namespace Novalia.Ui.Controls
         /// Selects the previous selection button.
         /// </summary>
         /// <returns>Returns the previous selection button.</returns>
-        public McSelectionButton SelectPrevious()
+        public NovaSelectionButton SelectPrevious()
         {
             if (PreviousSelection == null || PreviousSelection == this)
             {
@@ -91,7 +91,7 @@ namespace Novalia.Ui.Controls
         /// Selects the next selection button.
         /// </summary>
         /// <returns>Returns the next selection button.</returns>
-        public McSelectionButton SelectNext()
+        public NovaSelectionButton SelectNext()
         {
             if (NextSelection == null || NextSelection == this)
             {
@@ -103,14 +103,14 @@ namespace Novalia.Ui.Controls
                 // scanning for the next button like this will stack overflow if it loops,
                 // so we maintain the stack here.
                 // Note, we don't include this button yet. Looping back to self is acceptable.
-                return NextSelection.SelectNextProtected(new HashSet<McSelectionButton>());
+                return NextSelection.SelectNextProtected(new HashSet<NovaSelectionButton>());
             }
 
             NextSelection.IsFocused = true;
             return NextSelection;
         }
 
-        private McSelectionButton SelectNextProtected(HashSet<McSelectionButton> stack)
+        private NovaSelectionButton SelectNextProtected(HashSet<NovaSelectionButton> stack)
         {
             if (stack.Contains(this)
                 || NextSelection == null

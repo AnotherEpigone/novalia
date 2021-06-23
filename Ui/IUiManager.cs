@@ -1,5 +1,6 @@
 ﻿using Novalia.Maps;
 using Novalia.Ui.Consoles;
+using Novalia.Ui.Windows;
 using SadConsole;
 using SadRogue.Primitives;
 
@@ -14,7 +15,10 @@ namespace Novalia.Ui
 
         void ShowMainMenu(IGameManager gameManager);
 
+        PopupMenuWindow CreatePopupMenu(IGameManager gameManager);
+
         MainConsole CreateMapScreen(
+            IGameManager gameManager,
             WorldMap map,
             NovaGame game);
 

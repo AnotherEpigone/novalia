@@ -5,7 +5,7 @@ using System;
 
 namespace Novalia.Ui.Consoles.MainMenuPages
 {
-    public class SettingsConsole : McControlsConsole
+    public class SettingsConsole : NovaControlsConsole
     {
         public SettingsConsole(IUiManager uiManager, IGameManager gameManager, IAppSettings appSettings, int width, int height)
             : base(width, height)
@@ -13,7 +13,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             var buttonX = width / 2 - 15;
             const int topButtonY = 8;
 
-            var fullscreenToggleButton = new McSelectionButton(30, 1)
+            var fullscreenToggleButton = new NovaSelectionButton(30, 1)
             {
                 Text = "Toggle fullscreen",
                 Position = new Point(buttonX, topButtonY),
@@ -25,7 +25,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
                 uiManager.ShowMainMenu(gameManager);
             };
 
-            var setSize1920Button = new McSelectionButton(30, 1)
+            var setSize1920Button = new NovaSelectionButton(30, 1)
             {
                 Text = "Resize window: 1920x1080",
                 Position = new Point(buttonX, topButtonY + 2),
@@ -43,7 +43,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
                 uiManager.ShowMainMenu(gameManager);
             };
 
-            var setSize1600Button = new McSelectionButton(30, 1)
+            var setSize1600Button = new NovaSelectionButton(30, 1)
             {
                 Text = "Resize window: 1600x900",
                 Position = new Point(buttonX, topButtonY + 3),
@@ -61,7 +61,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
                 uiManager.ShowMainMenu(gameManager);
             };
 
-            var setSize1280Button = new McSelectionButton(30, 1)
+            var setSize1280Button = new NovaSelectionButton(30, 1)
             {
                 Text = "Resize window: 1280x720",
                 Position = new Point(buttonX, topButtonY + 4),
@@ -79,7 +79,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
                 uiManager.ShowMainMenu(gameManager);
             };
 
-            var backButton = new McSelectionButton(20, 1)
+            var backButton = new NovaSelectionButton(20, 1)
             {
                 Text = "Back",
                 Position = new Point(width / 2 - 10, topButtonY + 6),

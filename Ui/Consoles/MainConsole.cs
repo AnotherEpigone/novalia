@@ -10,18 +10,24 @@ namespace Novalia.Ui.Consoles
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class MainConsole : ScreenObject
     {
+        private readonly IGameManager _gameManager;
+        private readonly IUiManager _uiManager;
         private readonly WorldMap _map;
         private readonly NovaGame _game;
 
         public MainConsole(
+            IGameManager gameManager,
             IUiManager uiManager,
             WorldMap map,
             NovaGame game,
             bool debug)
         {
+            _gameManager = gameManager;
+            _uiManager = uiManager;
             _map = map;
             _game = game;
             UseMouse = false;
+            IsFocused = true;
 
             var empireStatusConsole = new EmpireStatusConsole(40, 5)
             {
@@ -49,6 +55,11 @@ namespace Novalia.Ui.Consoles
 
         public override bool ProcessKeyboard(Keyboard info)
         {
+            if (info.IsKeyPressed(Keys.Escape))
+            {
+                _uiManager.CreatePopupMenu(_gameManager).Show(true);
+            }
+
             return base.ProcessKeyboard(info);
         }
     }

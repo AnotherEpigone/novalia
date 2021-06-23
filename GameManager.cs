@@ -94,7 +94,7 @@ namespace Novalia
 
             var game = new NovaGame(sudet.Id, new Empire[] { sudet, blackhand });
 
-            Game.Instance.Screen = _uiManager.CreateMapScreen(_map, game);
+            Game.Instance.Screen = _uiManager.CreateMapScreen(this, _map, game);
         }
     }
 }

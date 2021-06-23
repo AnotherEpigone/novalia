@@ -7,24 +7,24 @@ using System.Linq;
 namespace Novalia.Ui.Consoles
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class McControlsConsole : ControlsConsole
+    public class NovaControlsConsole : ControlsConsole
     {
-        private Dictionary<McSelectionButton, System.Action> _selectionButtons;
-        private McSelectionButton _lastFocusedButton;
+        private Dictionary<NovaSelectionButton, System.Action> _selectionButtons;
+        private NovaSelectionButton _lastFocusedButton;
 
-        public McControlsConsole(int width, int height)
+        public NovaControlsConsole(int width, int height)
             : base(width, height)
         {
         }
 
-        public void SetupSelectionButtons(params McSelectionButton[] buttons)
+        public void SetupSelectionButtons(params NovaSelectionButton[] buttons)
         {
-            SetupSelectionButtons(new Dictionary<McSelectionButton, System.Action>(buttons.Select(b => new KeyValuePair<McSelectionButton, System.Action>(b, () => { }))));
+            SetupSelectionButtons(new Dictionary<NovaSelectionButton, System.Action>(buttons.Select(b => new KeyValuePair<NovaSelectionButton, System.Action>(b, () => { }))));
         }
 
-        public void SetupSelectionButtons(Dictionary<McSelectionButton, System.Action> buttonSelectionActions)
+        public void SetupSelectionButtons(Dictionary<NovaSelectionButton, System.Action> buttonSelectionActions)
         {
-            _selectionButtons = new Dictionary<McSelectionButton, System.Action>(buttonSelectionActions);
+            _selectionButtons = new Dictionary<NovaSelectionButton, System.Action>(buttonSelectionActions);
             if (_selectionButtons.Count < 1)
             {
                 return;
@@ -61,7 +61,7 @@ namespace Novalia.Ui.Consoles
 
         public override void Update(System.TimeSpan time)
         {
-            if (!(Controls.FocusedControl is McSelectionButton focusedButton)
+            if (!(Controls.FocusedControl is NovaSelectionButton focusedButton)
                 || focusedButton == _lastFocusedButton)
             {
                 base.Update(time);
@@ -78,7 +78,7 @@ namespace Novalia.Ui.Consoles
         {
             get
             {
-                return string.Format($"{nameof(McControlsConsole)} ({Position.X}, {Position.Y})");
+                return string.Format($"{nameof(NovaControlsConsole)} ({Position.X}, {Position.Y})");
             }
         }
     }

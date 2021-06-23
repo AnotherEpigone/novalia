@@ -93,7 +93,7 @@ namespace Novalia
                 RightEndGlyph = 4,
             };
 
-            Library.Default.SetControlTheme(typeof(McSelectionButton), buttonTheme);
+            Library.Default.SetControlTheme(typeof(NovaSelectionButton), buttonTheme);
             Library.Default.SetControlTheme(typeof(Button), buttonTheme);
         }
     }

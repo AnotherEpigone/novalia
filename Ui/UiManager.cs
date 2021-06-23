@@ -1,6 +1,7 @@
 ﻿using Novalia.Maps;
 using Novalia.Serialization.Settings;
 using Novalia.Ui.Consoles;
+using Novalia.Ui.Windows;
 using SadConsole;
 using SadRogue.Primitives;
 
@@ -21,9 +22,14 @@ namespace Novalia.Ui
         public string TileFontPath { get; } = "Fonts\\world.font";
         public string TileFontName { get; } = "World";
 
-        public MainConsole CreateMapScreen(WorldMap map, NovaGame game)
+        public MainConsole CreateMapScreen(IGameManager gameManager, WorldMap map, NovaGame game)
         {
-            return new MainConsole(this, map, game, _appSettings.Debug);
+            return new MainConsole(gameManager, this, map, game, _appSettings.Debug);
+        }
+
+        public PopupMenuWindow CreatePopupMenu(IGameManager gameManager)
+        {
+            return new PopupMenuWindow(this, gameManager);
         }
 
         public Point GetCentralWindowSize()

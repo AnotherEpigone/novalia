@@ -12,10 +12,10 @@ namespace Novalia.Ui.Consoles
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public sealed class MainMenuConsole : ScreenObject
     {
-        private readonly McControlsConsole _menuConsole;
+        private readonly NovaControlsConsole _menuConsole;
         private readonly SettingsConsole _settingsConsole;
 
-        private McControlsConsole _activeLowerConsole;
+        private NovaControlsConsole _activeLowerConsole;
 
         public MainMenuConsole(IUiManager uiManager, IGameManager gameManager, IAppSettings appSettings, int width, int height)
         {
@@ -46,7 +46,7 @@ namespace Novalia.Ui.Consoles
             return _menuConsole.ProcessKeyboard(info);
         }
 
-        private void FocusConsole(McControlsConsole toFocus)
+        private void FocusConsole(NovaControlsConsole toFocus)
         {
             if (_activeLowerConsole != null)
             {
@@ -59,13 +59,13 @@ namespace Novalia.Ui.Consoles
             _activeLowerConsole = toFocus;
         }
 
-        private McControlsConsole CreateMenuConsole(IGameManager gameManager, int width, int height)
+        private NovaControlsConsole CreateMenuConsole(IGameManager gameManager, int width, int height)
         {
-            var menuConsole = new McControlsConsole(width, height);
+            var menuConsole = new NovaControlsConsole(width, height);
 
             var buttonX = width / 2 - 12;
             const int topButtonY = 8;
-            var continueButton = new McSelectionButton(26, 1)
+            var continueButton = new NovaSelectionButton(26, 1)
             {
                 IsEnabled = gameManager.CanLoad(),
                 Text = "Continue",
@@ -73,28 +73,28 @@ namespace Novalia.Ui.Consoles
             };
             continueButton.Click += (_, __) => gameManager.LoadLatest();
 
-            var newGameButton = new McSelectionButton(26, 1)
+            var newGameButton = new NovaSelectionButton(26, 1)
             {
                 Text = "New Game",
                 Position = new Point(buttonX, topButtonY + 2),
             };
             newGameButton.Click += (_, __) => gameManager.StartNewGame();
 
-            var loadButton = new McSelectionButton(26, 1)
+            var loadButton = new NovaSelectionButton(26, 1)
             {
                 Text = "New Game",
                 Position = new Point(buttonX, topButtonY + 2),
             };
             //loadButton.Click += (_, __) => FocusConsole(_loadConsole);
 
-            var settingsButton = new McSelectionButton(26, 1)
+            var settingsButton = new NovaSelectionButton(26, 1)
             {
                 Text = "Settings",
                 Position = new Point(buttonX, topButtonY + 4),
             };
             settingsButton.Click += (_, __) => FocusConsole(_settingsConsole);
 
-            var exitButton = new McSelectionButton(26, 1)
+            var exitButton = new NovaSelectionButton(26, 1)
             {
                 Text = "Exit",
                 Position = new Point(buttonX, topButtonY + 6),
