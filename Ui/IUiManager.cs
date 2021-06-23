@@ -15,7 +15,8 @@ namespace Novalia.Ui
         void ShowMainMenu(IGameManager gameManager);
 
         MainConsole CreateMapScreen(
-            WorldMap map);
+            WorldMap map,
+            NovaGame game);
 
         void ToggleFullScreen();
 

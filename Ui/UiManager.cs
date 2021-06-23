@@ -21,9 +21,9 @@ namespace Novalia.Ui
         public string TileFontPath { get; } = "Fonts\\world.font";
         public string TileFontName { get; } = "World";
 
-        public MainConsole CreateMapScreen(WorldMap map)
+        public MainConsole CreateMapScreen(WorldMap map, NovaGame game)
         {
-            return new MainConsole(this, map, _appSettings.Debug);
+            return new MainConsole(this, map, game, _appSettings.Debug);
         }
 
         public Point GetCentralWindowSize()

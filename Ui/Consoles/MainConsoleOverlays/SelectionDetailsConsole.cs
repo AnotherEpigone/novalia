@@ -6,17 +6,17 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
 {
     public class SelectionDetailsConsole : Console
     {
-        public SelectionDetailsConsole(int width, int height, WorldMap map)
+        public SelectionDetailsConsole(int width, int height, WorldMap map, NovaGame game)
             : base(width, height)
         {
             DefaultBackground = ColorHelper.ControlBack;
 
             UseMouse = false;
 
-            Update(map);
+            Update(map, game);
         }
 
-        public void Update(WorldMap map)
+        public void Update(WorldMap map, NovaGame game)
         {
             this.Clear();
             this.Fill(background: ColorHelper.ControlBack);
@@ -36,8 +36,9 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
 
             if (map.SelectedUnit != null)
             {
+                var empire = game.Empires[map.SelectedUnit.EmpireId];
                 Cursor.Right(2).Print("Selected unit:\r\n", printTemplate, null);
-                Cursor.Right(2).Print($"{map.SelectedUnit.Name} (Empire name here)\r\n", printTemplate, null);
+                Cursor.Right(2).Print($"{map.SelectedUnit.Name} ({empire.Name})\r\n", printTemplate, null);
                 Cursor.Right(2).Print($"Health: 100\r\n", printTemplate, null);
             }
         }
