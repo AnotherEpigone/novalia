@@ -1,10 +1,13 @@
-﻿using SadRogue.Integration;
+﻿using Newtonsoft.Json;
+using Novalia.Serialization.Maps;
+using SadRogue.Integration;
 using SadRogue.Primitives;
 using System.Diagnostics;
 
 namespace Novalia.Maps
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [JsonConverter(typeof(TerrainJsonConverter))]
     public class Terrain : RogueLikeCell
     {
 

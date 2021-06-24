@@ -1,6 +1,8 @@
 ﻿using GoRogue.GameFramework;
+using Newtonsoft.Json;
 using Novalia.Fonts;
 using Novalia.Maps;
+using Novalia.Serialization.Entities;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
@@ -8,6 +10,7 @@ using System.Diagnostics;
 namespace Novalia.Entities
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [JsonConverter(typeof(UnitJsonConverter))]
     public class Unit : NovaEntity
     {
         private readonly NovaEntity _flag;
@@ -22,11 +25,13 @@ namespace Novalia.Entities
                 int layer,
                 Guid id,
                 Guid empireId,
-                Color empireColor)
+                Color empireColor,
+                string templateId)
             : base(position, glyph, name, walkable, transparent, layer, id)
         {
             EmpireId = empireId;
-
+            EmpireColor = empireColor;
+            TemplateId = templateId;
             Selected = false;
 
             _flag = new NovaEntity(position, GlyphAtlas.UnitBanner, $"Unit banner {name}", true, true, (int)MapEntityLayer.EFFECTS, Guid.NewGuid());
@@ -42,7 +47,8 @@ namespace Novalia.Entities
         }
 
         public Guid EmpireId { get; }
-
+        public Color EmpireColor { get; }
+        public string TemplateId { get; }
         public bool Selected { get; private set; }
 
         private string DebuggerDisplay => $"{nameof(Unit)}: {Name}";

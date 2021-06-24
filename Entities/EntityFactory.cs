@@ -17,7 +17,8 @@ namespace Novalia.Entities
                 (int)MapEntityLayer.ACTORS,
                 Guid.NewGuid(),
                 empireId,
-                empireColor);
+                empireColor,
+                template.Id);
 
             return unit;
         }

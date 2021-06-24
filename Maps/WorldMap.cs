@@ -32,6 +32,7 @@ namespace Novalia.Maps
         {
             UseMouse = true;
             base.UseMouse = false;
+            Font = font;
         }
 
         public event EventHandler SelectionChanged;
@@ -43,6 +44,8 @@ namespace Novalia.Maps
         public override bool UseMouse { get; set; }
 
         private string DebuggerDisplay => string.Format($"{nameof(WorldMap)} ({Width}, {Height})");
+
+        public IFont Font { get; }
 
         protected override bool ProcessMouse(MouseScreenObjectState state)
         {
