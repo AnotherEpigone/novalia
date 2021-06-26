@@ -10,7 +10,7 @@ namespace Novalia.Ui.Windows
         private bool _escReleased;
 
         public PopupMenuWindow(IUiManager uiManager, IGameManager gameManager)
-            : base(36, 9)
+            : base(36, 13)
         {
             CloseOnEscKey = false; // it would close as soon as it opens...
             IsModalDefault = true;
@@ -22,12 +22,24 @@ namespace Novalia.Ui.Windows
 
             Children.Add(background);
 
+            const string quitText = "Exit to Desktop";
+            var quitButtonWidth = quitText.Length + 4;
+            var quitButton = new NovaSelectionButton(quitButtonWidth, 1)
+            {
+                Text = quitText,
+                Position = new Point(Width / 2 - quitButtonWidth / 2, 2),
+            };
+            quitButton.Click += (_, __) =>
+            {
+                System.Environment.Exit(0);
+            };
+
             const string mainMenuText = "Exit to Main Menu";
             var mainMenuButtonWidth = mainMenuText.Length + 4;
             var mainMenuButton = new NovaSelectionButton(mainMenuButtonWidth, 1)
             {
                 Text = mainMenuText,
-                Position = new Point(Width / 2 - mainMenuButtonWidth / 2, Height - 7),
+                Position = new Point(Width / 2 - mainMenuButtonWidth / 2, 4),
             };
             mainMenuButton.Click += (_, __) =>
             {
@@ -35,16 +47,30 @@ namespace Novalia.Ui.Windows
                 uiManager.ShowMainMenu(gameManager);
             };
 
-            const string quitText = "Exit to Desktop";
-            var quitButtonWidth = mainMenuText.Length + 4;
-            var quitButton = new NovaSelectionButton(quitButtonWidth, 1)
+            const string saveText = "Save";
+            var saveButtonWidth = saveText.Length + 4;
+            var saveButton = new NovaSelectionButton(saveButtonWidth, 1)
             {
-                Text = quitText,
-                Position = new Point(Width / 2 - quitButtonWidth / 2, Height - 5),
+                Text = saveText,
+                Position = new Point(Width / 2 - saveButtonWidth / 2, 6),
             };
-            quitButton.Click += (_, __) =>
+            saveButton.Click += (_, __) =>
             {
-                System.Environment.Exit(0);
+                Hide();
+                gameManager.Save();
+            };
+
+            const string loadText = "Load";
+            var loadButtonWidth = loadText.Length + 4;
+            var loadButton = new NovaSelectionButton(loadButtonWidth, 1)
+            {
+                Text = loadText,
+                Position = new Point(Width / 2 - loadButtonWidth / 2, 8),
+            };
+            loadButton.Click += (_, __) =>
+            {
+                Hide();
+                gameManager.Load();
             };
 
             const string closeText = "Return to Game";
@@ -52,11 +78,11 @@ namespace Novalia.Ui.Windows
             var closeButton = new NovaSelectionButton(closeButtonWidth, 1)
             {
                 Text = closeText,
-                Position = new Point(Width / 2 - closeButtonWidth / 2, Height - 3),
+                Position = new Point(Width / 2 - closeButtonWidth / 2, 10),
             };
             closeButton.Click += (_, __) => Hide();
 
-            SetupSelectionButtons(mainMenuButton, quitButton, closeButton);
+            SetupSelectionButtons(quitButton, mainMenuButton, saveButton, loadButton, closeButton);
         }
 
         public override bool ProcessKeyboard(Keyboard info)

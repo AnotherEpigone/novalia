@@ -8,12 +8,17 @@ namespace Novalia.GameMechanics
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class Empire
     {
+        public Empire()
+        {
+            Gold = 0;
+            Id = Guid.NewGuid();
+        }
+
         public Empire(EmpireTemplate template)
+            :this()
         {
             TemplateId = template.Id;
             Name = template.Name;
-            Gold = 0;
-            Id = Guid.NewGuid();
         }
 
         [DataMember]

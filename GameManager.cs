@@ -3,10 +3,13 @@ using Novalia.Entities;
 using Novalia.GameMechanics;
 using Novalia.Logging;
 using Novalia.Maps;
+using Novalia.Serialization;
 using Novalia.Ui;
+using Novalia.Ui.Consoles;
 using SadConsole;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using System.Linq;
 using Troschuetz.Random.Generators;
 
 namespace Novalia
@@ -16,37 +19,64 @@ namespace Novalia
         private readonly IUiManager _uiManager;
         private readonly IEntityFactory _entityFactory;
         private readonly ILogger _logger;
-
-        private WorldMap _map;
+        private readonly ISaveManager _saveManager;
 
         public GameManager(
             IUiManager uiManager,
             IEntityFactory entityFactory,
-            ILogger logger)
+            ILogger logger,
+            ISaveManager saveManager)
         {
             _uiManager = uiManager;
             _entityFactory = entityFactory;
             _logger = logger;
+            _saveManager = saveManager;
         }
 
         public bool CanLoad()
         {
-            return false;
+            return _saveManager.SaveExists();
         }
 
         public void Load()
         {
-            throw new System.NotImplementedException();
+            var (success, gameState) = _saveManager.Read();
+            if (!success)
+            {
+                throw new System.IO.IOException("Failed to load save file.");
+            }
+
+            var game = new NovaGame(gameState.PlayerEmpireId, gameState.Empires);
+            Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, game);
         }
 
         public void LoadLatest()
         {
-            throw new System.NotImplementedException();
+            var (success, gameState) = _saveManager.Read();
+            if (!success)
+            {
+                throw new System.IO.IOException("Failed to load save file.");
+            }
+
+            var game = new NovaGame(gameState.PlayerEmpireId, gameState.Empires);
+            Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, game);
         }
 
         public void Save()
         {
-            throw new System.NotImplementedException();
+            if (Game.Instance.Screen is not MainConsole mainConsole)
+            {
+                return;
+            }
+
+            var save = new GameState()
+            {
+                Empires = mainConsole.Game.Empires.Values.ToArray(),
+                PlayerEmpireId = mainConsole.Game.PlayerEmpireId,
+                Map = mainConsole.Map,
+            };
+
+            _saveManager.Write(save);
         }
 
         public void StartNewGame()
@@ -68,12 +98,12 @@ namespace Novalia
 
             var generatedMap = generator.Context.GetFirst<ISettableGridView<bool>>("WallFloor");
 
-            _map = new WorldMap(tileWidth, tileHeight, tilesetFont);
+            var map = new WorldMap(tileWidth, tileHeight, tilesetFont);
 
-            foreach (var position in _map.Positions())
+            foreach (var position in map.Positions())
             {
                 var template = generatedMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.MapEdge;
-                _map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
+                map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
             }
 
             // TODO: attach the concrete empires and map to a game object
@@ -83,18 +113,18 @@ namespace Novalia
             var rng = new StandardGenerator();
             for (int i = 0; i < 50; i++)
             {
-                var position = _map.WalkabilityView.RandomPosition(true, rng);
+                var position = map.WalkabilityView.RandomPosition(true, rng);
                 var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, sudet.Id, Color.Red);
-                _map.AddEntity(unit);
+                map.AddEntity(unit);
 
-                position = _map.WalkabilityView.RandomPosition(true, rng);
+                position = map.WalkabilityView.RandomPosition(true, rng);
                 unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, Color.Blue);
-                _map.AddEntity(unit);
+                map.AddEntity(unit);
             }
 
             var game = new NovaGame(sudet.Id, new Empire[] { sudet, blackhand });
 
-            Game.Instance.Screen = _uiManager.CreateMapScreen(this, _map, game);
+            Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);
         }
     }
 }

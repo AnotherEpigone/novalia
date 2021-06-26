@@ -3,6 +3,7 @@ using log4net;
 using log4net.Config;
 using Novalia.Entities;
 using Novalia.Logging;
+using Novalia.Serialization;
 using Novalia.Serialization.Settings;
 using Novalia.Ui;
 
@@ -23,9 +24,9 @@ namespace Novalia
             builder.RegisterType<EntityFactory>()
                 .As<IEntityFactory>()
                 .SingleInstance();
-            ////builder.RegisterType<SaveManager>()
-            ////    .As<ISaveManager>()
-            ////    .SingleInstance();
+            builder.RegisterType<SaveManager>()
+                .As<ISaveManager>()
+                .SingleInstance();
 
             builder.RegisterType<Logger>()
                 .As<ILogger>()

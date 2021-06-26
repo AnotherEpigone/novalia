@@ -12,8 +12,6 @@ namespace Novalia.Ui.Consoles
     {
         private readonly IGameManager _gameManager;
         private readonly IUiManager _uiManager;
-        private readonly WorldMap _map;
-        private readonly NovaGame _game;
 
         public MainConsole(
             IGameManager gameManager,
@@ -24,8 +22,8 @@ namespace Novalia.Ui.Consoles
         {
             _gameManager = gameManager;
             _uiManager = uiManager;
-            _map = map;
-            _game = game;
+            Map = map;
+            Game = game;
             UseMouse = false;
             IsFocused = true;
 
@@ -34,14 +32,14 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - 40, 0),
             };
 
-            var selectionDetailsConsole = new SelectionDetailsConsole(40, 8, _map, _game)
+            var selectionDetailsConsole = new SelectionDetailsConsole(40, 8, Map, Game)
             {
                 Position = new Point(uiManager.ViewPortWidth - 40, 5),
             };
 
-            _map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(_map, _game);
+            Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
 
-            Children.Add(_map);
+            Children.Add(Map);
             Children.Add(empireStatusConsole);
             Children.Add(selectionDetailsConsole);
 
@@ -50,6 +48,10 @@ namespace Novalia.Ui.Consoles
                 ////SadComponents.Add(new MouseTint());
             }
         }
+
+        public WorldMap Map { get; }
+
+        public NovaGame Game { get; }
 
         private string DebuggerDisplay => string.Format($"{nameof(MainConsole)} ({Position.X}, {Position.Y})");
 

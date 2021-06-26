@@ -1,4 +1,6 @@
-﻿using Novalia.Entities;
+﻿using Newtonsoft.Json;
+using Novalia.Entities;
+using Novalia.Serialization.Maps;
 using SadConsole;
 using SadConsole.Input;
 using SadRogue.Integration.Maps;
@@ -19,6 +21,7 @@ namespace Novalia.Maps
     }
 
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
+    [JsonConverter(typeof(WorldMapJsonConverter))]
     public class WorldMap : RogueLikeMap
     {
         public WorldMap(int width, int height, IFont font)
