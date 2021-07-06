@@ -28,13 +28,12 @@ namespace Novalia.Maps
             : base(
                   width,
                   height,
+                  null,
                   Enum.GetNames(typeof(MapEntityLayer)).Length - 1,
                   Distance.Chebyshev,
-                  entityLayersSupportingMultipleItems: GoRogue.SpatialMaps.LayerMasker.DEFAULT.Mask((int)MapEntityLayer.ITEMS, (int)MapEntityLayer.ACTORS, (int)MapEntityLayer.EFFECTS),
-                  font: font)
+                  entityLayersSupportingMultipleItems: GoRogue.SpatialMaps.LayerMasker.DEFAULT.Mask((int)MapEntityLayer.ITEMS, (int)MapEntityLayer.ACTORS, (int)MapEntityLayer.EFFECTS))
         {
-            UseMouse = true;
-            base.UseMouse = false;
+            DefaultRenderer = CreateRenderer(CreateWorldMapRenderer, new Point(width, height), font, font.GetFontSize(IFont.Sizes.One));
             Font = font;
         }
 
@@ -44,22 +43,29 @@ namespace Novalia.Maps
 
         public Point SelectedPoint { get; private set; }
 
-        public override bool UseMouse { get; set; }
-
         private string DebuggerDisplay => string.Format($"{nameof(WorldMap)} ({Width}, {Height})");
 
         public IFont Font { get; }
 
-        protected override bool ProcessMouse(MouseScreenObjectState state)
+        private IScreenSurface CreateWorldMapRenderer(
+            ICellSurface surface,
+            IFont? font,
+            Point? fontSize)
         {
-            state = new MouseScreenObjectState(BackingObject, state.Mouse.Clone());
-            if (state.Mouse.LeftClicked)
+            var renderer = new WorldMapRenderer(surface, font, fontSize.Value);
+            renderer.MouseClick += Renderer_MouseClick;
+            return renderer;
+        }
+
+        private void Renderer_MouseClick(object sender, MouseScreenObjectState e)
+        {
+            if (e.Mouse.LeftClicked)
             {
-                SelectedPoint = state.CellPosition;
+                SelectedPoint = e.CellPosition;
                 SelectedUnit?.ToggleSelected();
                 SelectedUnit = null;
 
-                var clickedUnit = GetEntityAt<Unit>(state.CellPosition);
+                var clickedUnit = GetEntityAt<Unit>(e.CellPosition);
                 if (clickedUnit != null)
                 {
                     clickedUnit.ToggleSelected();
@@ -68,8 +74,6 @@ namespace Novalia.Maps
 
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
             }
-
-            return base.ProcessMouse(state);
         }
     }
 }

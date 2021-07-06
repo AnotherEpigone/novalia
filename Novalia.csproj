@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.2.0" />
-    <PackageReference Include="GoRogue" Version="3.0.0-alpha03-debug" />
+    <PackageReference Include="GoRogue" Version="3.0.0-alpha04" />
     <PackageReference Include="ini-parser" Version="2.5.2" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="SadConsole" Version="9.0.0" />
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SadRogue.Integration.Fork\TheSadRogue.Integration\TheSadRogue.Integration.csproj" />
+    <ProjectReference Include="..\TheSadRogue.Integration\TheSadRogue.Integration\TheSadRogue.Integration.csproj" />
   </ItemGroup>
 
   <ItemGroup>
