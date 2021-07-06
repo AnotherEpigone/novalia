@@ -39,7 +39,8 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
                 var empire = game.Empires[map.SelectedUnit.EmpireId];
                 Cursor.Right(2).Print("Selected unit:\r\n", printTemplate, null);
                 Cursor.Right(2).Print($"{map.SelectedUnit.Name} ({empire.Name})\r\n", printTemplate, null);
-                Cursor.Right(2).Print($"Health: 100\r\n", printTemplate, null);
+                Cursor.Right(2).Print($"Health: {map.SelectedUnit.RemainingHealth}/{map.SelectedUnit.MaxHealth}\r\n", printTemplate, null);
+                Cursor.Right(2).Print($"Movement: {map.SelectedUnit.RemainingMovement}/{map.SelectedUnit.Movement}\r\n", printTemplate, null);
             }
         }
     }

@@ -18,7 +18,9 @@ namespace Novalia.Entities
                 Guid.NewGuid(),
                 empireId,
                 empireColor,
-                template.Id);
+                template.Id,
+                template.Movement,
+                template.MaxHealth);
 
             return unit;
         }

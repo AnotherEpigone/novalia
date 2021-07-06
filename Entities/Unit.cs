@@ -26,12 +26,18 @@ namespace Novalia.Entities
                 Guid id,
                 Guid empireId,
                 Color empireColor,
-                string templateId)
+                string templateId,
+                float movement,
+                int maxHealth)
             : base(position, glyph, name, walkable, transparent, layer, id)
         {
             EmpireId = empireId;
             EmpireColor = empireColor;
             TemplateId = templateId;
+            Movement = movement;
+            RemainingMovement = movement;
+            MaxHealth = maxHealth;
+            RemainingHealth = maxHealth;
             Selected = false;
 
             _flag = new NovaEntity(position, GlyphAtlas.UnitBanner, $"Unit banner {name}", true, true, (int)MapEntityLayer.EFFECTS, Guid.NewGuid());
@@ -49,6 +55,10 @@ namespace Novalia.Entities
         public Guid EmpireId { get; }
         public Color EmpireColor { get; }
         public string TemplateId { get; }
+        public float Movement { get; }
+        public float RemainingMovement { get; set; }
+        public int MaxHealth { get; }
+        public float RemainingHealth { get; set; }
         public bool Selected { get; private set; }
 
         private string DebuggerDisplay => $"{nameof(Unit)}: {Name}";

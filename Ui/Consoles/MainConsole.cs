@@ -32,7 +32,7 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - 40, 0),
             };
 
-            var selectionDetailsConsole = new SelectionDetailsConsole(40, 8, Map, Game)
+            var selectionDetailsConsole = new SelectionDetailsConsole(40, 10, Map, Game)
             {
                 Position = new Point(uiManager.ViewPortWidth - 40, 5),
             };

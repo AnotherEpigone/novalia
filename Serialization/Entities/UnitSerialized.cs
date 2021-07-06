@@ -23,6 +23,10 @@ namespace Novalia.Serialization.Entities
         [DataMember] Guid UnitId;
         [DataMember] Guid EmpireId;
         [DataMember] Color EmpireColor;
+        [DataMember] float Movement;
+        [DataMember] float RemainingMovement;
+        [DataMember] int MaxHealth;
+        [DataMember] float RemainingHealth;
 
         public static implicit operator UnitSerialized(Unit unit)
         {
@@ -33,6 +37,10 @@ namespace Novalia.Serialization.Entities
                 UnitId = unit.Id,
                 EmpireId = unit.EmpireId,
                 EmpireColor = unit.EmpireColor,
+                Movement = unit.Movement,
+                RemainingMovement = unit.RemainingMovement,
+                MaxHealth = unit.MaxHealth,
+                RemainingHealth = unit.RemainingHealth,
             };
         }
 
@@ -49,7 +57,13 @@ namespace Novalia.Serialization.Entities
                 serialized.UnitId,
                 serialized.EmpireId,
                 serialized.EmpireColor,
-                serialized.TemplateId);
+                serialized.TemplateId,
+                serialized.Movement,
+                serialized.MaxHealth)
+            {
+                RemainingMovement = serialized.RemainingMovement,
+                RemainingHealth = serialized.RemainingHealth,
+            };
         }
     }
 }
