@@ -16,12 +16,21 @@ namespace Novalia.Maps
         }
 
         public event EventHandler<MouseScreenObjectState> MouseClick;
+        public event EventHandler<MouseScreenObjectState> RightMouseButtonDown;
 
         public override bool ProcessMouse(MouseScreenObjectState state)
         {
+            state = new MouseScreenObjectState(this, state.Mouse);
+            if (state.Mouse.RightButtonDown)
+            {
+                RightMouseButtonDown?.Invoke(this, state);
+                return true;
+            }
+
             if (state.Mouse.LeftClicked)
             {
-                MouseClick.Invoke(this, state);
+                MouseClick?.Invoke(this, state);
+                return true;
             }
 
             return base.ProcessMouse(state);

@@ -16,8 +16,29 @@ namespace Novalia.Entities
             bool transparent,
             int layer,
             Guid id)
+            :this(
+                 position,
+                 Color.White,
+                 glyph,
+                 name,
+                 walkable,
+                 transparent,
+                 layer,
+                 id)
+        { }
+
+        public NovaEntity(
+            Point position,
+            Color foreground,
+            int glyph,
+            string name,
+            bool walkable,
+            bool transparent,
+            int layer,
+            Guid id)
             : base(
                   position,
+                  foreground,
                   glyph,
                   walkable: walkable,
                   transparent: transparent,
