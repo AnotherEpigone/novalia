@@ -9,6 +9,14 @@ using System.Diagnostics;
 
 namespace Novalia.Entities
 {
+    public enum UnitMovementResult
+    {
+        Moved,
+        NoMovement,
+        Combat,
+        Blocked,
+    }
+
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [JsonConverter(typeof(UnitJsonConverter))]
     public class Unit : NovaEntity
@@ -52,6 +60,8 @@ namespace Novalia.Entities
             RemovedFromMap += Unit_RemovedFromMap;
         }
 
+        public event EventHandler StatsChanged;
+
         public Guid EmpireId { get; }
         public Color EmpireColor { get; }
         public string TemplateId { get; }
@@ -67,6 +77,31 @@ namespace Novalia.Entities
         {
             Selected = !Selected;
             _selectionOverlay.IsVisible = Selected;
+        }
+
+        public UnitMovementResult TryMove(Point target)
+        {
+            if (RemainingMovement < 0.01)
+            {
+                return UnitMovementResult.NoMovement;
+            }
+
+            // TODO get the real movement cost
+            var movementCost = 1;
+            RemainingMovement = Math.Max(0, RemainingMovement - movementCost);
+            StatsChanged?.Invoke(this, EventArgs.Empty);
+
+            var oldPosition = Position;
+            Position = target;
+            if (Position == oldPosition)
+            {
+                // TODO detect combat
+                return UnitMovementResult.Blocked;
+            }
+
+            _flag.Position = Position;
+            _selectionOverlay.Position = Position;
+            return UnitMovementResult.Moved;
         }
 
         private void HandleMapChange()

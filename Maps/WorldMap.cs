@@ -28,8 +28,9 @@ namespace Novalia.Maps
     public class WorldMap : RogueLikeMap
     {
         private Point _pathOverlayTarget;
-        private bool _keepPathOverlay;
+        private bool _rmbDown;
         private bool _pathOverlayVisible;
+        private Unit _selectedUnit;
 
         public WorldMap(int width, int height, IFont font)
             : base(
@@ -45,8 +46,25 @@ namespace Novalia.Maps
         }
 
         public event EventHandler SelectionChanged;
+        public event EventHandler SelectionStatsChanged;
 
-        public Unit SelectedUnit { get; private set; }
+        public Unit SelectedUnit
+        { 
+            get => _selectedUnit;
+            private set
+            {
+                if (_selectedUnit != null)
+                {
+                    _selectedUnit.StatsChanged -= SelectionStatsChanged;
+                }
+
+                _selectedUnit = value;
+                if (_selectedUnit != null)
+                {
+                    _selectedUnit.StatsChanged += SelectionStatsChanged;
+                }
+            }
+        }
 
         public Point SelectedPoint { get; private set; }
 
@@ -56,16 +74,15 @@ namespace Novalia.Maps
 
         public override void Update(TimeSpan delta)
         {
-            if (_pathOverlayVisible && !_keepPathOverlay)
+            if (_pathOverlayVisible && !_rmbDown)
             {
-                _pathOverlayVisible = false;
-                _pathOverlayTarget = Point.None;
-                ClearGui();
+                MoveSelectedUnit();
+                ClearPathOverlay();
             }
 
-            if (_keepPathOverlay)
+            if (_rmbDown)
             {
-                _keepPathOverlay = false;
+                _rmbDown = false;
             }
 
             base.Update(delta);
@@ -77,9 +94,16 @@ namespace Novalia.Maps
             Point? fontSize)
         {
             var renderer = new WorldMapRenderer(surface, font, fontSize.Value);
-            renderer.MouseClick += Renderer_MouseClick;
+            renderer.LeftMouseClick += Renderer_LeftMouseClick;
             renderer.RightMouseButtonDown += Renderer_RightMouseButtonDown;
             return renderer;
+        }
+
+        private void ClearPathOverlay()
+        {
+            _pathOverlayVisible = false;
+            _pathOverlayTarget = Point.None;
+            ClearGui();
         }
 
         private void ClearGui()
@@ -102,7 +126,7 @@ namespace Novalia.Maps
             if (_pathOverlayTarget == target)
             {
                 // don't recalculate for the same target
-                _keepPathOverlay = true;
+                _rmbDown = true;
                 return;
             }
 
@@ -114,7 +138,7 @@ namespace Novalia.Maps
 
             _pathOverlayTarget = target;
             _pathOverlayVisible = true;
-            _keepPathOverlay = true;
+            _rmbDown = true;
 
             ClearGui();
             foreach (var step in path.Steps)
@@ -131,30 +155,51 @@ namespace Novalia.Maps
             }
         }
 
-        private void Renderer_MouseClick(object sender, MouseScreenObjectState e)
+        private void Renderer_LeftMouseClick(object sender, MouseScreenObjectState e)
         {
-            if (e.Mouse.LeftClicked)
+            SelectedUnit?.ToggleSelected();
+            SelectedUnit = null;
+            if (SelectedPoint == e.CellPosition)
             {
-                SelectedUnit?.ToggleSelected();
-                SelectedUnit = null;
-                if (SelectedPoint == e.CellPosition)
-                {
-                    SelectedPoint = Point.None;
-                    SelectionChanged?.Invoke(this, EventArgs.Empty);
-                    return;
-                }
-
-                SelectedPoint = e.CellPosition;                
-
-                var clickedUnit = GetEntityAt<Unit>(e.CellPosition);
-                if (clickedUnit != null)
-                {
-                    clickedUnit.ToggleSelected();
-                    SelectedUnit = clickedUnit;
-                }
-
+                SelectedPoint = Point.None;
                 SelectionChanged?.Invoke(this, EventArgs.Empty);
+                return;
             }
+
+            SelectedPoint = e.CellPosition;
+
+            var clickedUnit = GetEntityAt<Unit>(e.CellPosition);
+            if (clickedUnit != null)
+            {
+                clickedUnit.ToggleSelected();
+                SelectedUnit = clickedUnit;
+            }
+
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void MoveSelectedUnit()
+        {
+            if (SelectedUnit == null)
+            {
+                return;
+            }
+
+            var path = AStar.ShortestPath(SelectedPoint, _pathOverlayTarget);
+            if (path == null)
+            {
+                return;
+            }
+
+            foreach (var step in path.Steps)
+            {
+                if (SelectedUnit.TryMove(step) != UnitMovementResult.Moved)
+                {
+                    break;
+                }
+            }
+
+            SelectedPoint = SelectedUnit.Position;
         }
     }
 }

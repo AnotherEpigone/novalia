@@ -15,7 +15,8 @@ namespace Novalia.Maps
         {
         }
 
-        public event EventHandler<MouseScreenObjectState> MouseClick;
+        public event EventHandler<MouseScreenObjectState> LeftMouseClick;
+        public event EventHandler<MouseScreenObjectState> RightMouseClick;
         public event EventHandler<MouseScreenObjectState> RightMouseButtonDown;
 
         public override bool ProcessMouse(MouseScreenObjectState state)
@@ -29,7 +30,13 @@ namespace Novalia.Maps
 
             if (state.Mouse.LeftClicked)
             {
-                MouseClick?.Invoke(this, state);
+                LeftMouseClick?.Invoke(this, state);
+                return true;
+            }
+
+            if (state.Mouse.RightClicked)
+            {
+                RightMouseClick?.Invoke(this, state);
                 return true;
             }
 

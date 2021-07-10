@@ -38,6 +38,7 @@ namespace Novalia.Ui.Consoles
             };
 
             Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
+            Map.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
 
             Children.Add(Map);
             Children.Add(empireStatusConsole);
