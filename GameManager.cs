@@ -98,17 +98,17 @@ namespace Novalia
 
             var generatedMap = generator.Context.GetFirst<ISettableGridView<bool>>("WallFloor");
 
-            var map = new WorldMap(tileWidth, tileHeight, tilesetFont);
+            var sudet = new Empire(EmpireAtlas.Sudet);
+            var blackhand = new Empire(EmpireAtlas.BlackhandDominion);
+            var playerEmpire = sudet;
+
+            var map = new WorldMap(tileWidth, tileHeight, tilesetFont, playerEmpire.Id);
 
             foreach (var position in map.Positions())
             {
                 var template = generatedMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.MapEdge;
                 map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
             }
-
-            // TODO: attach the concrete empires and map to a game object
-            var sudet = new Empire(EmpireAtlas.Sudet);
-            var blackhand = new Empire(EmpireAtlas.BlackhandDominion);
 
             var rng = new StandardGenerator();
             for (int i = 0; i < 50; i++)
@@ -122,7 +122,7 @@ namespace Novalia
                 map.AddEntity(unit);
             }
 
-            var game = new NovaGame(sudet.Id, new Empire[] { sudet, blackhand });
+            var game = new NovaGame(playerEmpire.Id, new Empire[] { sudet, blackhand });
 
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);
         }

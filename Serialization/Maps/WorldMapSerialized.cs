@@ -3,6 +3,7 @@ using Novalia.Entities;
 using Novalia.Extensions;
 using Novalia.Maps;
 using SadConsole;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -24,6 +25,7 @@ namespace Novalia.Serialization.Maps
         [DataMember] public string FontId;
         [DataMember] public Terrain[] Terrain;
         [DataMember] public Unit[] Units;
+        [DataMember] Guid PlayerEmpireId;
 
         public static implicit operator WorldMapSerialized(WorldMap map)
         {
@@ -34,12 +36,17 @@ namespace Novalia.Serialization.Maps
                 FontId = map.Font.Name,
                 Terrain = map.Terrain.ToEnumerable().Cast<Terrain>().ToArray(),
                 Units = map.Entities.Items.OfType<Unit>().ToArray(),
+                PlayerEmpireId = map.PlayerEmpireId,
             };
         }
 
         public static implicit operator WorldMap(WorldMapSerialized serialized)
         {
-            var map = new WorldMap(serialized.Width, serialized.Height, Game.Instance.Fonts[serialized.FontId]);
+            var map = new WorldMap(
+                serialized.Width,
+                serialized.Height,
+                Game.Instance.Fonts[serialized.FontId],
+                serialized.PlayerEmpireId);
             foreach (var terrain in serialized.Terrain)
             {
                 map.SetTerrain(terrain);

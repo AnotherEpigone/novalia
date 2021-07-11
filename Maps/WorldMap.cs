@@ -26,13 +26,12 @@ namespace Novalia.Maps
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [JsonConverter(typeof(WorldMapJsonConverter))]
     public class WorldMap : RogueLikeMap
-    {
-        private Point _pathOverlayTarget;
+    {        private Point _pathOverlayTarget;
         private bool _rmbDown;
         private bool _pathOverlayVisible;
         private Unit _selectedUnit;
 
-        public WorldMap(int width, int height, IFont font)
+        public WorldMap(int width, int height, IFont font, Guid playerEmpireId)
             : base(
                   width,
                   height,
@@ -43,6 +42,7 @@ namespace Novalia.Maps
         {
             DefaultRenderer = CreateRenderer(CreateWorldMapRenderer, new Point(width, height), font, font.GetFontSize(IFont.Sizes.One));
             Font = font;
+            PlayerEmpireId = playerEmpireId;
         }
 
         public event EventHandler SelectionChanged;
@@ -71,6 +71,7 @@ namespace Novalia.Maps
         private string DebuggerDisplay => string.Format($"{nameof(WorldMap)} ({Width}, {Height})");
 
         public IFont Font { get; }
+        public Guid PlayerEmpireId { get; }
 
         public override void Update(TimeSpan delta)
         {
@@ -169,7 +170,8 @@ namespace Novalia.Maps
             SelectedPoint = e.CellPosition;
 
             var clickedUnit = GetEntityAt<Unit>(e.CellPosition);
-            if (clickedUnit != null)
+            if (clickedUnit != null
+                && clickedUnit.EmpireId == PlayerEmpireId)
             {
                 clickedUnit.ToggleSelected();
                 SelectedUnit = clickedUnit;
