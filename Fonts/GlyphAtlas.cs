@@ -15,5 +15,9 @@
         // Gui
         public const int UnitBanner = 8;
         public const int SelectionOverlay = 9;
+        public const int MovementPreview1 = 10;
+        public const int MovementPreview0 = 19;
+        public const int MovementPreview10 = 29;
+        public const int MovementPreview99plus = 38;
     }
 }

@@ -9,6 +9,7 @@ using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Novalia.Maps
 {
@@ -38,7 +39,7 @@ namespace Novalia.Maps
                   null,
                   Enum.GetNames(typeof(MapEntityLayer)).Length,
                   Distance.Chebyshev,
-                  entityLayersSupportingMultipleItems: GoRogue.SpatialMaps.LayerMasker.DEFAULT.Mask((int)MapEntityLayer.ITEMS, (int)MapEntityLayer.ACTORS, (int)MapEntityLayer.EFFECTS))
+                  entityLayersSupportingMultipleItems: GoRogue.SpatialMaps.LayerMasker.DEFAULT.Mask((int)MapEntityLayer.ITEMS, (int)MapEntityLayer.ACTORS, (int)MapEntityLayer.EFFECTS, (int)MapEntityLayer.GUI))
         {
             DefaultRenderer = CreateRenderer(CreateWorldMapRenderer, new Point(width, height), font, font.GetFontSize(IFont.Sizes.One));
             Font = font;
@@ -116,6 +117,61 @@ namespace Novalia.Maps
             }
         }
 
+        private void AddTurnCountEntities(int turns, Point point)
+        {
+            var alpha = turns > 1
+                        ? 150
+                        : 210;
+            if (turns < 10)
+            {
+                AddEntity(new NovaEntity(
+                    point,
+                    new Color(Color.White, 210),
+                    GlyphAtlas.MovementPreview1 + turns - 1,
+                    "step highlight - turn count",
+                    true,
+                    true,
+                    (int)MapEntityLayer.GUI,
+                    Guid.NewGuid()));
+            }
+            else if (turns > 99)
+            {
+                AddEntity(new NovaEntity(
+                    point,
+                    new Color(Color.White, 150),
+                    GlyphAtlas.MovementPreview99plus,
+                    "step highlight - turn count",
+                    true,
+                    true,
+                    (int)MapEntityLayer.GUI,
+                    Guid.NewGuid()));
+            }
+            else
+            {
+                // tens digit.
+                AddEntity(new NovaEntity(
+                    point,
+                    new Color(Color.White, 150),
+                    GlyphAtlas.MovementPreview10 + (turns / 10) - 1,
+                    "step highlight - turn count",
+                    true,
+                    true,
+                    (int)MapEntityLayer.GUI,
+                    Guid.NewGuid()));
+
+                // ones digit.
+                AddEntity(new NovaEntity(
+                    point,
+                    new Color(Color.White, alpha),
+                    GlyphAtlas.MovementPreview0 + (turns % 10),
+                    "step highlight - turn count",
+                    true,
+                    true,
+                    (int)MapEntityLayer.GUI,
+                    Guid.NewGuid()));
+            }
+        }
+
         private void Renderer_RightMouseButtonDown(object sender, MouseScreenObjectState e)
         {
             if (SelectedUnit == null)
@@ -142,17 +198,32 @@ namespace Novalia.Maps
             _rmbDown = true;
 
             ClearGui();
-            foreach (var step in path.Steps)
+            var remainingMovement = SelectedUnit.RemainingMovement;
+            var steps = path.Steps.ToList();
+            var turns = remainingMovement > 0.01 ? 1 : 2;
+            for (int i = 0; i < steps.Count; i++)
             {
-                AddEntity(new NovaEntity(
-                    step,
-                    new Color(Color.White, 100),
-                    GlyphAtlas.Solid,
-                    "step highlight",
-                    true,
-                    true,
-                    (int)MapEntityLayer.GUI,
-                    Guid.NewGuid()));
+                // TODO compute real movement cost
+                var movementCost = 1;
+                remainingMovement -= movementCost;
+                if (remainingMovement > 0.01 && i < steps.Count - 1)
+                {
+                    AddEntity(new NovaEntity(
+                        steps[i],
+                        new Color(Color.White, 100),
+                        GlyphAtlas.Solid,
+                        "step highlight",
+                        true,
+                        true,
+                        (int)MapEntityLayer.GUI,
+                        Guid.NewGuid()));
+                }
+                else
+                {
+                    AddTurnCountEntities(turns, steps[i]);
+                    remainingMovement = SelectedUnit.Movement;
+                    turns++;
+                }
             }
         }
 
