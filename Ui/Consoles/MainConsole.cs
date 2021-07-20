@@ -4,6 +4,7 @@ using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Novalia.Ui.Consoles
 {
@@ -61,6 +62,7 @@ namespace Novalia.Ui.Consoles
             if (info.IsKeyPressed(Keys.Escape))
             {
                 _uiManager.CreatePopupMenu(_gameManager).Show(true);
+                return true;
             }
 
             if (Map.HandleKeyboard(info))

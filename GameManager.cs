@@ -87,11 +87,8 @@ namespace Novalia
             var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
             var defaultFont = Game.Instance.DefaultFont;
 
-            var tileSizeXFactor = (double)tilesetFont.GlyphWidth / defaultFont.GlyphWidth;
-            var tileSizeYFactor = (double)tilesetFont.GlyphHeight / defaultFont.GlyphHeight;
-
-            var tileWidth = (int)(_uiManager.ViewPortWidth / tileSizeXFactor);
-            var tileHeight = (int)(_uiManager.ViewPortHeight / tileSizeYFactor);
+            var tileWidth = 80;
+            var tileHeight = 80;
             var generator = new Generator(tileWidth, tileHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
@@ -105,6 +102,8 @@ namespace Novalia
             var playerEmpire = sudet;
 
             var map = new WorldMap(tileWidth, tileHeight, tilesetFont, playerEmpire.Id);
+            map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
+                GetViewportSizeInTiles(tilesetFont, defaultFont) - map.DefaultRenderer.Surface.View.Size);
 
             foreach (var position in map.Positions())
             {
@@ -113,7 +112,7 @@ namespace Novalia
             }
 
             var rng = new StandardGenerator();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var position = map.WalkabilityView.RandomPosition(true, rng);
                 var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, sudet.Id, Color.Red);
@@ -129,6 +128,16 @@ namespace Novalia
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);
             Game.Instance.DestroyDefaultStartingConsole();
             Game.Instance.Screen.IsFocused = true;
+        }
+
+        private Point GetViewportSizeInTiles(IFont tilesetFont, IFont defaultFont)
+        {
+            var tileSizeXFactor = (double)tilesetFont.GlyphWidth / defaultFont.GlyphWidth;
+            var tileSizeYFactor = (double)tilesetFont.GlyphHeight / defaultFont.GlyphHeight;
+            var viewPortTileWidth = (int)(_uiManager.ViewPortWidth / tileSizeXFactor);
+            var viewPortTileHeight = (int)(_uiManager.ViewPortHeight / tileSizeYFactor);
+
+            return new Point(viewPortTileWidth, viewPortTileHeight);
         }
     }
 }

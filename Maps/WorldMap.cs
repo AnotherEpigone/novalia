@@ -92,8 +92,39 @@ namespace Novalia.Maps
                     SelectedUnit = moveableUnit;
                     SelectedPoint = SelectedUnit.Position;
                     SelectedUnit.ToggleSelected();
+                    DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.WithCenter(SelectedPoint);
                 }
 
+                return true;
+            }
+
+            if (keyboard.IsKeyPressed(Keys.C))
+            {
+                DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.WithCenter(SelectedPoint);
+                return true;
+            }
+
+            if (keyboard.IsKeyPressed(Keys.Down))
+            {
+                DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.ChangePosition(Direction.Down);
+                return true;
+            }
+
+            if (keyboard.IsKeyPressed(Keys.Up))
+            {
+                DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.ChangePosition(Direction.Up);
+                return true;
+            }
+
+            if (keyboard.IsKeyPressed(Keys.Right))
+            {
+                DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.ChangePosition(Direction.Right);
+                return true;
+            }
+
+            if (keyboard.IsKeyPressed(Keys.Left))
+            {
+                DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.ChangePosition(Direction.Left);
                 return true;
             }
 
