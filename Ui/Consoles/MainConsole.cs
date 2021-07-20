@@ -38,12 +38,21 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - 40, 5),
             };
 
+            var minimap = new ScreenSurface(
+                new MinimapTerrainCellSurface(Map, 320, 320),
+                SadConsole.Game.Instance.Fonts[uiManager.MiniMapFontName]);
+            var minimapGlyphPosition = new Point(uiManager.ViewPortWidth - 40, 9 + 6);
+            minimap.Position = new Point(
+                minimapGlyphPosition.X * SadConsole.Game.Instance.DefaultFont.GlyphWidth,
+                minimapGlyphPosition.Y * SadConsole.Game.Instance.DefaultFont.GlyphHeight);
+
             Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
             Map.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
 
             Children.Add(Map);
             Children.Add(empireStatusConsole);
             Children.Add(selectionDetailsConsole);
+            Children.Add(minimap);
 
             if (debug)
             {

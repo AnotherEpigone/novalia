@@ -1,6 +1,6 @@
 ﻿namespace Novalia.Fonts
 {
-    public static class GlyphAtlas
+    public static class WorldGlyphAtlas
     {
         // Gui
         public const int Solid = 1;

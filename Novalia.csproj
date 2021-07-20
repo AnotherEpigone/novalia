@@ -22,6 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Fonts\minimap.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\minimap.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Fonts\world.font">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

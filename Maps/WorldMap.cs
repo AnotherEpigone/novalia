@@ -75,6 +75,12 @@ namespace Novalia.Maps
         public IFont Font { get; }
         public Guid PlayerEmpireId { get; }
 
+        public IScreenSurface CreateMinimapRenderer(int pixelWidth, int pixelHeight, IFont pixelFont)
+        {
+            var cellSurface = new MapTerrainCellSurface(this, pixelWidth, pixelHeight);
+            return new ScreenSurface(cellSurface, pixelFont);
+        }
+
         public bool HandleKeyboard(Keyboard keyboard)
         {
             if (keyboard.IsKeyPressed(Keys.Enter))
@@ -182,7 +188,7 @@ namespace Novalia.Maps
                 AddEntity(new NovaEntity(
                     point,
                     new Color(Color.White, 210),
-                    GlyphAtlas.MovementPreview1 + turns - 1,
+                    WorldGlyphAtlas.MovementPreview1 + turns - 1,
                     "step highlight - turn count",
                     true,
                     true,
@@ -194,7 +200,7 @@ namespace Novalia.Maps
                 AddEntity(new NovaEntity(
                     point,
                     new Color(Color.White, 150),
-                    GlyphAtlas.MovementPreview99plus,
+                    WorldGlyphAtlas.MovementPreview99plus,
                     "step highlight - turn count",
                     true,
                     true,
@@ -207,7 +213,7 @@ namespace Novalia.Maps
                 AddEntity(new NovaEntity(
                     point,
                     new Color(Color.White, 150),
-                    GlyphAtlas.MovementPreview10 + (turns / 10) - 1,
+                    WorldGlyphAtlas.MovementPreview10 + (turns / 10) - 1,
                     "step highlight - turn count",
                     true,
                     true,
@@ -218,7 +224,7 @@ namespace Novalia.Maps
                 AddEntity(new NovaEntity(
                     point,
                     new Color(Color.White, alpha),
-                    GlyphAtlas.MovementPreview0 + (turns % 10),
+                    WorldGlyphAtlas.MovementPreview0 + (turns % 10),
                     "step highlight - turn count",
                     true,
                     true,
@@ -266,7 +272,7 @@ namespace Novalia.Maps
                     AddEntity(new NovaEntity(
                         steps[i],
                         new Color(Color.White, 100),
-                        GlyphAtlas.Solid,
+                        WorldGlyphAtlas.Solid,
                         "step highlight",
                         true,
                         true,

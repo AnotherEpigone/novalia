@@ -22,6 +22,9 @@ namespace Novalia.Ui
         public string TileFontPath { get; } = "Fonts\\world.font";
         public string TileFontName { get; } = "World";
 
+        public string MiniMapFontPath { get; } = "Fonts\\minimap.font";
+        public string MiniMapFontName { get; } = "Minimap";
+
         public MainConsole CreateMapScreen(IGameManager gameManager, WorldMap map, NovaGame game)
         {
             return new MainConsole(gameManager, this, map, game, _appSettings.Debug);

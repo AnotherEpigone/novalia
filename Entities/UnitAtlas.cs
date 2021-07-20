@@ -27,7 +27,7 @@ namespace Novalia.Entities
         public static UnitTemplate CaveTroll => new UnitTemplate(
             "UNIT_CAVETROLL",
             "Cave troll",
-            GlyphAtlas.Unit_CaveTroll,
+            WorldGlyphAtlas.Unit_CaveTroll,
             2,
             100);
     }

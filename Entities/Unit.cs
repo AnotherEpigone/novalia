@@ -48,10 +48,10 @@ namespace Novalia.Entities
             RemainingHealth = maxHealth;
             Selected = false;
 
-            _flag = new NovaEntity(position, GlyphAtlas.UnitBanner, $"Unit banner {name}", true, true, (int)MapEntityLayer.EFFECTS, Guid.NewGuid());
+            _flag = new NovaEntity(position, WorldGlyphAtlas.UnitBanner, $"Unit banner {name}", true, true, (int)MapEntityLayer.EFFECTS, Guid.NewGuid());
             _flag.Appearance.Foreground = empireColor;
 
-            _selectionOverlay = new NovaEntity(position, GlyphAtlas.SelectionOverlay, $"Selection overlay {name}", true, true, (int)MapEntityLayer.EFFECTS, Guid.NewGuid())
+            _selectionOverlay = new NovaEntity(position, WorldGlyphAtlas.SelectionOverlay, $"Selection overlay {name}", true, true, (int)MapEntityLayer.EFFECTS, Guid.NewGuid())
             {
                 IsVisible = false
             };

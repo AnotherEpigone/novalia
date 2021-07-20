@@ -12,6 +12,8 @@ namespace Novalia.Ui
         int ViewPortWidth { get; }
         string TileFontPath { get; }
         string TileFontName { get; }
+        string MiniMapFontPath { get; }
+        string MiniMapFontName { get; }
 
         void ShowMainMenu(IGameManager gameManager);
 
