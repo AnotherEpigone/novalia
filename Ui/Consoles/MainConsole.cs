@@ -25,7 +25,7 @@ namespace Novalia.Ui.Consoles
             Map = map;
             Game = game;
             UseMouse = false;
-            IsFocused = true;
+            UseKeyboard = true;
 
             var empireStatusConsole = new EmpireStatusConsole(40, 5)
             {
@@ -61,6 +61,11 @@ namespace Novalia.Ui.Consoles
             if (info.IsKeyPressed(Keys.Escape))
             {
                 _uiManager.CreatePopupMenu(_gameManager).Show(true);
+            }
+
+            if (Map.HandleKeyboard(info))
+            {
+                return true;
             }
 
             return base.ProcessKeyboard(info);

@@ -60,6 +60,8 @@ namespace Novalia
 
             var game = new NovaGame(gameState.PlayerEmpireId, gameState.Empires);
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, game);
+            Game.Instance.DestroyDefaultStartingConsole();
+            Game.Instance.Screen.IsFocused = true;
         }
 
         public void Save()
@@ -125,6 +127,8 @@ namespace Novalia
             var game = new NovaGame(playerEmpire.Id, new Empire[] { sudet, blackhand });
 
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);
+            Game.Instance.DestroyDefaultStartingConsole();
+            Game.Instance.Screen.IsFocused = true;
         }
     }
 }

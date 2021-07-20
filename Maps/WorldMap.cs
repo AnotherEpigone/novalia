@@ -27,7 +27,8 @@ namespace Novalia.Maps
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     [JsonConverter(typeof(WorldMapJsonConverter))]
     public class WorldMap : RogueLikeMap
-    {        private Point _pathOverlayTarget;
+    {
+        private Point _pathOverlayTarget;
         private bool _rmbDown;
         private bool _pathOverlayVisible;
         private Unit _selectedUnit;
@@ -74,18 +75,40 @@ namespace Novalia.Maps
         public IFont Font { get; }
         public Guid PlayerEmpireId { get; }
 
+        public bool HandleKeyboard(Keyboard keyboard)
+        {
+            if (keyboard.IsKeyPressed(Keys.Enter))
+            {
+                var moveableUnit = Entities.Items
+                    .OfType<Unit>()
+                    .Where(e => e.EmpireId == PlayerEmpireId
+                        && e.RemainingMovement > 0.01
+                        && e != SelectedUnit)
+                    .OrderBy(u => u.LastSelected)
+                    .FirstOrDefault();
+                if (moveableUnit != null)
+                {
+                    SelectedUnit?.ToggleSelected();
+                    SelectedUnit = moveableUnit;
+                    SelectedPoint = SelectedUnit.Position;
+                    SelectedUnit.ToggleSelected();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         public override void Update(TimeSpan delta)
         {
             if (_pathOverlayVisible && !_rmbDown)
             {
-                MoveSelectedUnit();
+                MoveSelectedUnit(_pathOverlayTarget);
                 ClearPathOverlay();
             }
 
-            if (_rmbDown)
-            {
-                _rmbDown = false;
-            }
+            _rmbDown = false;
 
             base.Update(delta);
         }
@@ -98,6 +121,7 @@ namespace Novalia.Maps
             var renderer = new WorldMapRenderer(surface, font, fontSize.Value);
             renderer.LeftMouseClick += Renderer_LeftMouseClick;
             renderer.RightMouseButtonDown += Renderer_RightMouseButtonDown;
+            renderer.UseMouse = true;
             return renderer;
         }
 
@@ -251,14 +275,14 @@ namespace Novalia.Maps
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private void MoveSelectedUnit()
+        private void MoveSelectedUnit(Point target)
         {
             if (SelectedUnit == null)
             {
                 return;
             }
 
-            var path = AStar.ShortestPath(SelectedPoint, _pathOverlayTarget);
+            var path = AStar.ShortestPath(SelectedPoint, target);
             if (path == null)
             {
                 return;

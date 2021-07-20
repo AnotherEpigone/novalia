@@ -56,6 +56,8 @@ namespace Novalia.Entities
                 IsVisible = false
             };
 
+            LastSelected = DateTime.UtcNow;
+
             AddedToMap += Unit_AddedToMap;
             RemovedFromMap += Unit_RemovedFromMap;
         }
@@ -71,12 +73,18 @@ namespace Novalia.Entities
         public float RemainingHealth { get; set; }
         public bool Selected { get; private set; }
 
+        public DateTime LastSelected { get; private set; }
+
         private string DebuggerDisplay => $"{nameof(Unit)}: {Name}";
 
         public void ToggleSelected()
         {
             Selected = !Selected;
             _selectionOverlay.IsVisible = Selected;
+            if (Selected)
+            {
+                LastSelected = DateTime.UtcNow;
+            }
         }
 
         public UnitMovementResult TryMove(Point target)

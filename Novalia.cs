@@ -45,6 +45,9 @@ namespace Novalia
             InitControls();
 
             Settings.ResizeMode = Settings.WindowResizeOptions.None;
+            Settings.DefaultConsoleUseKeyboard = false;
+            Settings.DefaultScreenObjectUseKeyboard = false;
+            Settings.DefaultScreenObjectUseMouse = false;
 
             if (_appSettings.FullScreen)
             {
