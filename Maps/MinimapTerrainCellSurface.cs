@@ -1,4 +1,5 @@
-﻿using SadConsole;
+﻿using Novalia.Fonts;
+using SadConsole;
 using SadConsole.Effects;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -35,6 +36,15 @@ namespace Novalia.Maps
                 var referencePos = new Point(
                     (int)(pos.X * _widthRatio),
                     (int)(pos.Y * _heightRatio));
+                if (_map.DefaultRenderer.Surface.View.Contains(referencePos)
+                    &&(referencePos.X == _map.DefaultRenderer.Surface.View.X
+                        || referencePos.X == _map.DefaultRenderer.Surface.View.MaxExtentX
+                        || referencePos.Y == _map.DefaultRenderer.Surface.View.Y
+                        || referencePos.Y == _map.DefaultRenderer.Surface.View.MaxExtentY))
+                {
+                    return new ColoredGlyph(Color.White, DefaultBackground, MinimapGlyphAtlas.Solid);
+                }
+
                 return _map.TerrainView[referencePos];
             }
         }
