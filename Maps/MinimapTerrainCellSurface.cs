@@ -33,19 +33,17 @@ namespace Novalia.Maps
         {
             get
             {
-                var referencePos = new Point(
-                    (int)(pos.X * _widthRatio),
-                    (int)(pos.Y * _heightRatio));
-                if (_map.DefaultRenderer.Surface.View.Contains(referencePos)
-                    &&(referencePos.X == _map.DefaultRenderer.Surface.View.X
-                        || referencePos.X == _map.DefaultRenderer.Surface.View.MaxExtentX
-                        || referencePos.Y == _map.DefaultRenderer.Surface.View.Y
-                        || referencePos.Y == _map.DefaultRenderer.Surface.View.MaxExtentY))
+                var mapPos = MinimapToMap(pos);
+                if (_map.DefaultRenderer.Surface.View.Contains(mapPos)
+                    &&(mapPos.X == _map.DefaultRenderer.Surface.View.X
+                        || mapPos.X == _map.DefaultRenderer.Surface.View.MaxExtentX
+                        || mapPos.Y == _map.DefaultRenderer.Surface.View.Y
+                        || mapPos.Y == _map.DefaultRenderer.Surface.View.MaxExtentY))
                 {
                     return new ColoredGlyph(Color.White, DefaultBackground, MinimapGlyphAtlas.Solid);
                 }
 
-                return _map.TerrainView[referencePos];
+                return _map.TerrainView[mapPos];
             }
         }
 
@@ -105,5 +103,19 @@ namespace Novalia.Maps
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public Point MapToMinimap(Point mapPoint)
+        {
+            return new Point(
+                    (int)(mapPoint.X / _widthRatio),
+                    (int)(mapPoint.Y / _heightRatio));
+        }
+
+        public Point MinimapToMap(Point minimapPoint)
+        {
+            return new Point(
+                    (int)(minimapPoint.X * _widthRatio),
+                    (int)(minimapPoint.Y * _heightRatio));
+        }
     }
 }

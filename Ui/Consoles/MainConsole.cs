@@ -38,7 +38,8 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - 40, 5),
             };
 
-            var minimap = new ScreenSurface(
+            var minimap = new MinimapScreenSurface(
+                Map,
                 new MinimapTerrainCellSurface(Map, 320, 320),
                 SadConsole.Game.Instance.Fonts[uiManager.MiniMapFontName]);
             var minimapGlyphPosition = new Point(uiManager.ViewPortWidth - 40, 9 + 6);
