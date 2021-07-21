@@ -3,6 +3,7 @@ using Novalia.Entities;
 using Novalia.GameMechanics;
 using Novalia.Logging;
 using Novalia.Maps;
+using Novalia.Maps.Generation.Steps;
 using Novalia.Serialization;
 using Novalia.Ui;
 using Novalia.Ui.Consoles;
@@ -89,13 +90,15 @@ namespace Novalia
 
             var tileWidth = 80;
             var tileHeight = 80;
-            var generator = new Generator(tileWidth, tileHeight)
+            var rng = new StandardGenerator();
+            var continentsStep = new ContinentsGenerationStep(rng, 200, 0.3F);
+            var mapGenerator = new Generator(tileWidth, tileHeight)
                 .ConfigAndGenerateSafe(gen =>
                 {
-                    gen.AddSteps(DefaultAlgorithms.RectangleMapSteps());
+                    gen.AddSteps(continentsStep);
                 });
 
-            var generatedMap = generator.Context.GetFirst<ISettableGridView<bool>>("WallFloor");
+            var generatedMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(continentsStep.ComponentTag);
 
             var sudet = new Empire(EmpireAtlas.Sudet);
             var blackhand = new Empire(EmpireAtlas.BlackhandDominion);
@@ -107,11 +110,10 @@ namespace Novalia
 
             foreach (var position in map.Positions())
             {
-                var template = generatedMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.MapEdge;
+                var template = generatedMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.Ocean;
                 map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
             }
 
-            var rng = new StandardGenerator();
             for (int i = 0; i < 10; i++)
             {
                 var position = map.WalkabilityView.RandomPosition(true, rng);

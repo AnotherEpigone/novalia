@@ -37,5 +37,12 @@ namespace Novalia.Maps
             WorldGlyphAtlas.Terrain_Grassland,
             true,
             true);
+
+        public static TerrainTemplate Ocean => new TerrainTemplate(
+            "TERRAIN_OCEAN",
+            "Ocean",
+            WorldGlyphAtlas.Terrain_Ocean,
+            false,
+            false);
     }
 }
