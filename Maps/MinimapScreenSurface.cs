@@ -20,11 +20,18 @@ namespace Novalia.Maps
             UseMouse = true;
         }
 
-        protected override void OnMouseLeftClicked(MouseScreenObjectState state)
+        public override bool ProcessMouse(MouseScreenObjectState state)
         {
-            var minimapPos = state.CellPosition;
-            var mapPos = _cellSurface.MinimapToMap(minimapPos);
-            _map.DefaultRenderer.Surface.View = _map.DefaultRenderer.Surface.View.WithCenter(mapPos);
+            if (state.IsOnScreenObject && state.Mouse.LeftButtonDown)
+            {
+                var minimapPos = state.CellPosition;
+                var mapPos = _cellSurface.MinimapToMap(minimapPos);
+                _map.DefaultRenderer.Surface.View = _map.DefaultRenderer.Surface.View.WithCenter(mapPos);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
