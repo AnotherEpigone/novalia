@@ -63,6 +63,8 @@ namespace Novalia
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, game);
             Game.Instance.DestroyDefaultStartingConsole();
             Game.Instance.Screen.IsFocused = true;
+
+            map.SelectNextUnit();
         }
 
         public void LoadLatest()
@@ -82,6 +84,7 @@ namespace Novalia
                 Empires = mainConsole.Game.Empires.Values.ToArray(),
                 PlayerEmpireId = mainConsole.Game.PlayerEmpireId,
                 Map = mainConsole.Map,
+                Turn = mainConsole.Game.TurnManager.Turn,
             };
 
             _saveManager.Write(save);
@@ -138,6 +141,8 @@ namespace Novalia
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);
             Game.Instance.DestroyDefaultStartingConsole();
             Game.Instance.Screen.IsFocused = true;
+
+            map.SelectNextUnit();
         }
 
         private Point GetViewportSizeInTiles(IFont tilesetFont, IFont defaultFont)

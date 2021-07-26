@@ -151,6 +151,29 @@ namespace Novalia.Maps
             base.Update(delta);
         }
 
+        public bool SelectNextUnit()
+        {
+            var moveableUnit = Entities.Items
+                    .OfType<Unit>()
+                    .Where(e => e.EmpireId == PlayerEmpireId
+                        && e.RemainingMovement > 0.01
+                        && e != SelectedUnit)
+                    .OrderBy(u => u.LastSelected)
+                    .FirstOrDefault();
+            if (moveableUnit == null)
+            {
+                return false;
+            }
+
+            SelectedUnit?.ToggleSelected();
+            SelectedUnit = moveableUnit;
+            SelectedPoint = SelectedUnit.Position;
+            SelectedUnit.ToggleSelected();
+            DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.WithCenter(SelectedPoint);
+
+            return true;
+        }
+
         private IScreenSurface CreateWorldMapRenderer(
             ICellSurface surface,
             IFont? font,
@@ -177,29 +200,6 @@ namespace Novalia.Maps
             {
                 RemoveEntity(entity);
             }
-        }
-
-        private bool SelectNextUnit()
-        {
-            var moveableUnit = Entities.Items
-                    .OfType<Unit>()
-                    .Where(e => e.EmpireId == PlayerEmpireId
-                        && e.RemainingMovement > 0.01
-                        && e != SelectedUnit)
-                    .OrderBy(u => u.LastSelected)
-                    .FirstOrDefault();
-            if (moveableUnit == null)
-            {
-                return false;
-            }
-
-            SelectedUnit?.ToggleSelected();
-            SelectedUnit = moveableUnit;
-            SelectedPoint = SelectedUnit.Position;
-            SelectedUnit.ToggleSelected();
-            DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.WithCenter(SelectedPoint);
-
-            return true;
         }
 
         private void AddTurnCountEntities(int turns, Point point)
