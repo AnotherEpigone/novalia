@@ -5,14 +5,18 @@ using System.Linq;
 
 namespace Novalia.GameMechanics
 {
-    public class TurnManager
+    public class TurnManager : ITurnManager
     {
-        public TurnManager(int turn)
+        public TurnManager()
         {
-            Turn = turn;
+            Turn = 0;
         }
 
-        public int Turn { get; }
+        public event EventHandler NewTurn;
+
+        public int Turn { get; private set; }
+
+        public void InitTurn(int turn) => Turn = turn;
 
         public bool ReadyToEndTurn(WorldMap map, Guid playerEmpireId)
         {
@@ -20,6 +24,12 @@ namespace Novalia.GameMechanics
                 .OfType<Unit>()
                 .Any(e => e.EmpireId == playerEmpireId
                         && e.RemainingMovement > 0.01);
+        }
+
+        public void EndTurn()
+        {
+            Turn++;
+            NewTurn?.Invoke(this, EventArgs.Empty);
         }
     }
 }

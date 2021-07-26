@@ -4,7 +4,6 @@ using SadConsole;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Novalia.Ui.Consoles
 {
@@ -47,7 +46,7 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 20),
             };
 
-            var logConsole = new LogConsole(RightPaneWidth, uiManager.ViewPortHeight - 35, Map, Game)
+            var logConsole = new LogConsole(RightPaneWidth, uiManager.ViewPortHeight - 35)
             {
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 35),
             };

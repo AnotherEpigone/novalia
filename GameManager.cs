@@ -49,7 +49,9 @@ namespace Novalia
 
             var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
             var defaultFont = Game.Instance.DefaultFont;
-            var game = new NovaGame(gameState.PlayerEmpireId, gameState.Empires);
+            var game = new NovaGame(
+                gameState.PlayerEmpireId,
+                gameState.Empires);
             var map = gameState.Map;
             map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
                 GetViewportSizeInTiles(tilesetFont, defaultFont) - map.DefaultRenderer.Surface.View.Size);

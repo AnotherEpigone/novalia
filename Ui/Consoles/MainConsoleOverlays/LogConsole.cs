@@ -1,16 +1,14 @@
-﻿using Novalia.Maps;
-using SadConsole;
+﻿using SadConsole;
 using SadRogue.Primitives;
 
 namespace Novalia.Ui.Consoles.MainConsoleOverlays
 {
     public class LogConsole : Console
     {
-        public LogConsole(int width, int height, WorldMap map, NovaGame game)
+        public LogConsole(int width, int height)
             : base(width, height)
         {
             DefaultBackground = ColorHelper.ControlBack;
-
             UseMouse = false;
 
             Update();

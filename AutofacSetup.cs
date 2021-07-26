@@ -2,6 +2,7 @@
 using log4net;
 using log4net.Config;
 using Novalia.Entities;
+using Novalia.GameMechanics;
 using Novalia.Logging;
 using Novalia.Serialization;
 using Novalia.Serialization.Settings;
@@ -30,6 +31,10 @@ namespace Novalia
 
             builder.RegisterType<Logger>()
                 .As<ILogger>()
+                .SingleInstance();
+
+            builder.RegisterType<TurnManager>()
+                .As<ITurnManager>()
                 .SingleInstance();
 
             builder.RegisterType<AppSettings>()
