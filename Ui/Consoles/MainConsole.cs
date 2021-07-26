@@ -28,38 +28,46 @@ namespace Novalia.Ui.Consoles
             UseMouse = false;
             UseKeyboard = true;
 
-            var empireStatusConsole = new EmpireStatusConsole(40, 5)
-            {
-                Position = new Point(uiManager.ViewPortWidth - 40, 0),
-            };
-
-            var selectionDetailsConsole = new SelectionDetailsConsole(40, 9, Map, Game)
-            {
-                Position = new Point(uiManager.ViewPortWidth - 40, 5),
-            };
-
             var minimap = new MinimapScreenSurface(
                 Map,
-                new MinimapTerrainCellSurface(Map, 320, 320),
+                new MinimapTerrainCellSurface(Map, 320, 240),
                 SadConsole.Game.Instance.Fonts[uiManager.MiniMapFontName]);
-            var minimapGlyphPosition = new Point(uiManager.ViewPortWidth - 40, 9 + 6);
+            var minimapGlyphPosition = new Point(uiManager.ViewPortWidth - 40, 0);
             minimap.Position = new Point(
                 minimapGlyphPosition.X * SadConsole.Game.Instance.DefaultFont.GlyphWidth,
                 minimapGlyphPosition.Y * SadConsole.Game.Instance.DefaultFont.GlyphHeight);
+
+            var empireStatusConsole = new EmpireStatusConsole(RightPaneWidth, 5)
+            {
+                Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 15),
+            };
+
+            var selectionDetailsConsole = new SelectionDetailsConsole(RightPaneWidth, 15, Map, Game)
+            {
+                Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 20),
+            };
+
+            var logConsole = new LogConsole(RightPaneWidth, uiManager.ViewPortHeight - 35, Map, Game)
+            {
+                Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 35),
+            };
 
             Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
             Map.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
 
             Children.Add(Map);
+            Children.Add(minimap);
             Children.Add(empireStatusConsole);
             Children.Add(selectionDetailsConsole);
-            Children.Add(minimap);
+            Children.Add(logConsole);
 
             if (debug)
             {
                 ////SadComponents.Add(new MouseTint());
             }
         }
+
+        public static int RightPaneWidth => 40;
 
         public WorldMap Map { get; }
 

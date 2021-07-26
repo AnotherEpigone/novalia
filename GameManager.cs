@@ -47,22 +47,21 @@ namespace Novalia
                 throw new System.IO.IOException("Failed to load save file.");
             }
 
+            var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
+            var defaultFont = Game.Instance.DefaultFont;
             var game = new NovaGame(gameState.PlayerEmpireId, gameState.Empires);
+            var map = gameState.Map;
+            map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
+                GetViewportSizeInTiles(tilesetFont, defaultFont) - map.DefaultRenderer.Surface.View.Size);
+
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, game);
+            Game.Instance.DestroyDefaultStartingConsole();
+            Game.Instance.Screen.IsFocused = true;
         }
 
         public void LoadLatest()
         {
-            var (success, gameState) = _saveManager.Read();
-            if (!success)
-            {
-                throw new System.IO.IOException("Failed to load save file.");
-            }
-
-            var game = new NovaGame(gameState.PlayerEmpireId, gameState.Empires);
-            Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, game);
-            Game.Instance.DestroyDefaultStartingConsole();
-            Game.Instance.Screen.IsFocused = true;
+            Load();
         }
 
         public void Save()
@@ -139,7 +138,10 @@ namespace Novalia
             var viewPortTileWidth = (int)(_uiManager.ViewPortWidth / tileSizeXFactor);
             var viewPortTileHeight = (int)(_uiManager.ViewPortHeight / tileSizeYFactor);
 
-            return new Point(viewPortTileWidth, viewPortTileHeight);
+            var rightPaneWidth = (int)(MainConsole.RightPaneWidth / tileSizeXFactor);
+            var mapWidth = viewPortTileWidth - rightPaneWidth;
+
+            return new Point(mapWidth, viewPortTileHeight);
         }
     }
 }

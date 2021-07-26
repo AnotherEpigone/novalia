@@ -29,6 +29,7 @@ namespace Novalia.Maps
 
             Effects = new EffectsManager(this);
         }
+
         public override ColoredGlyph this[Point pos]
         {
             get
