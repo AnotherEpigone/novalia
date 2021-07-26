@@ -7,9 +7,9 @@ namespace Novalia.GameMechanics
 {
     public class TurnManager : ITurnManager
     {
-        public TurnManager()
+        public TurnManager(int turn)
         {
-            Turn = 0;
+            Turn = turn;
         }
 
         public event EventHandler NewTurn;

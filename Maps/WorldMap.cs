@@ -49,6 +49,7 @@ namespace Novalia.Maps
 
         public event EventHandler SelectionChanged;
         public event EventHandler SelectionStatsChanged;
+        public event EventHandler EndTurnRequested;
 
         public Unit SelectedUnit
         { 
@@ -81,24 +82,23 @@ namespace Novalia.Maps
             return new ScreenSurface(cellSurface, pixelFont);
         }
 
+        public void OnNewturn()
+        {
+            foreach (var unit in Entities.Items.OfType<Unit>())
+            {
+                unit.RemainingMovement = unit.Movement;
+            }
+
+            SelectNextUnit();
+        }
+
         public bool HandleKeyboard(Keyboard keyboard)
         {
             if (keyboard.IsKeyPressed(Keys.Enter))
             {
-                var moveableUnit = Entities.Items
-                    .OfType<Unit>()
-                    .Where(e => e.EmpireId == PlayerEmpireId
-                        && e.RemainingMovement > 0.01
-                        && e != SelectedUnit)
-                    .OrderBy(u => u.LastSelected)
-                    .FirstOrDefault();
-                if (moveableUnit != null)
+                if (!SelectNextUnit())
                 {
-                    SelectedUnit?.ToggleSelected();
-                    SelectedUnit = moveableUnit;
-                    SelectedPoint = SelectedUnit.Position;
-                    SelectedUnit.ToggleSelected();
-                    DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.WithCenter(SelectedPoint);
+                    EndTurnRequested?.Invoke(this, EventArgs.Empty);
                 }
 
                 return true;
@@ -143,6 +143,7 @@ namespace Novalia.Maps
             {
                 MoveSelectedUnit(_pathOverlayTarget);
                 ClearPathOverlay();
+                SelectNextUnit();
             }
 
             _rmbDown = false;
@@ -176,6 +177,29 @@ namespace Novalia.Maps
             {
                 RemoveEntity(entity);
             }
+        }
+
+        private bool SelectNextUnit()
+        {
+            var moveableUnit = Entities.Items
+                    .OfType<Unit>()
+                    .Where(e => e.EmpireId == PlayerEmpireId
+                        && e.RemainingMovement > 0.01
+                        && e != SelectedUnit)
+                    .OrderBy(u => u.LastSelected)
+                    .FirstOrDefault();
+            if (moveableUnit == null)
+            {
+                return false;
+            }
+
+            SelectedUnit?.ToggleSelected();
+            SelectedUnit = moveableUnit;
+            SelectedPoint = SelectedUnit.Position;
+            SelectedUnit.ToggleSelected();
+            DefaultRenderer.Surface.View = DefaultRenderer.Surface.View.WithCenter(SelectedPoint);
+
+            return true;
         }
 
         private void AddTurnCountEntities(int turns, Point point)

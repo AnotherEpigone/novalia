@@ -16,5 +16,8 @@ namespace Novalia.Serialization
 
         [DataMember]
         public WorldMap Map { get; set; }
+
+        [DataMember]
+        public int Turn { get; set; }
     }
 }

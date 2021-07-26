@@ -21,17 +21,20 @@ namespace Novalia
         private readonly IEntityFactory _entityFactory;
         private readonly ILogger _logger;
         private readonly ISaveManager _saveManager;
+        private readonly ITurnManagerFactory _turnManagerFactory;
 
         public GameManager(
             IUiManager uiManager,
             IEntityFactory entityFactory,
             ILogger logger,
-            ISaveManager saveManager)
+            ISaveManager saveManager,
+            ITurnManagerFactory turnManagerFactory)
         {
             _uiManager = uiManager;
             _entityFactory = entityFactory;
             _logger = logger;
             _saveManager = saveManager;
+            _turnManagerFactory = turnManagerFactory;
         }
 
         public bool CanLoad()
@@ -51,7 +54,8 @@ namespace Novalia
             var defaultFont = Game.Instance.DefaultFont;
             var game = new NovaGame(
                 gameState.PlayerEmpireId,
-                gameState.Empires);
+                gameState.Empires,
+                _turnManagerFactory.Create(gameState.Turn));
             var map = gameState.Map;
             map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
                 GetViewportSizeInTiles(tilesetFont, defaultFont) - map.DefaultRenderer.Surface.View.Size);
@@ -115,7 +119,7 @@ namespace Novalia
                 map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
             }
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 2; i++)
             {
                 var position = map.WalkabilityView.RandomPosition(true, rng);
                 var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, sudet.Id, Color.Red);
@@ -126,7 +130,10 @@ namespace Novalia
                 map.AddEntity(unit);
             }
 
-            var game = new NovaGame(playerEmpire.Id, new Empire[] { sudet, blackhand });
+            var game = new NovaGame(
+                playerEmpire.Id,
+                new Empire[] { sudet, blackhand },
+                _turnManagerFactory.Create(0));
 
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);
             Game.Instance.DestroyDefaultStartingConsole();

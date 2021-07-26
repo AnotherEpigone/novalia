@@ -33,8 +33,8 @@ namespace Novalia
                 .As<ILogger>()
                 .SingleInstance();
 
-            builder.RegisterType<TurnManager>()
-                .As<ITurnManager>()
+            builder.RegisterType<TurnManagerFactory>()
+                .As<ITurnManagerFactory>()
                 .SingleInstance();
 
             builder.RegisterType<AppSettings>()

@@ -1,7 +1,10 @@
-﻿using Novalia.Maps;
+﻿using Novalia.GameMechanics;
+using Novalia.Maps;
 using Novalia.Ui.Consoles.MainConsoleOverlays;
+using Novalia.Ui.Controls;
 using SadConsole;
 using SadConsole.Input;
+using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System.Diagnostics;
 
@@ -22,8 +25,10 @@ namespace Novalia.Ui.Consoles
         {
             _gameManager = gameManager;
             _uiManager = uiManager;
+
             Map = map;
             Game = game;
+
             UseMouse = false;
             UseKeyboard = true;
 
@@ -36,7 +41,7 @@ namespace Novalia.Ui.Consoles
                 minimapGlyphPosition.X * SadConsole.Game.Instance.DefaultFont.GlyphWidth,
                 minimapGlyphPosition.Y * SadConsole.Game.Instance.DefaultFont.GlyphHeight);
 
-            var empireStatusConsole = new EmpireStatusConsole(RightPaneWidth, 5)
+            var empireStatusConsole = new EmpireStatusConsole(RightPaneWidth, 5, game)
             {
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 15),
             };
@@ -46,19 +51,37 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 20),
             };
 
-            var logConsole = new LogConsole(RightPaneWidth, uiManager.ViewPortHeight - 35)
+            var logConsole = new LogConsole(RightPaneWidth, uiManager.ViewPortHeight - 36)
             {
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 35),
             };
 
+            var endTurnButton = new NovaSelectionButton(RightPaneWidth, 1)
+            {
+                Text = "End turn",
+            };
+            endTurnButton.Click += (_, __) =>
+            {
+                Endturn();
+                IsFocused = true;
+            };
+
+            var buttonConsole = new NovaControlsConsole(RightPaneWidth, 1)
+            {
+                Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, uiManager.ViewPortHeight - 1),
+            };
+            buttonConsole.SetupSelectionButtons(endTurnButton);
+
             Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
             Map.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
+            Map.EndTurnRequested += (_, __) => Endturn();
 
             Children.Add(Map);
             Children.Add(minimap);
             Children.Add(empireStatusConsole);
             Children.Add(selectionDetailsConsole);
             Children.Add(logConsole);
+            Children.Add(buttonConsole);
 
             if (debug)
             {
@@ -88,6 +111,12 @@ namespace Novalia.Ui.Consoles
             }
 
             return base.ProcessKeyboard(info);
+        }
+
+        private void Endturn()
+        {
+            Game.TurnManager.EndTurn();
+            Map.OnNewturn();
         }
     }
 }

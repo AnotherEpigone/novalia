@@ -5,9 +5,14 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
 {
     public class EmpireStatusConsole : Console
     {
-        public EmpireStatusConsole(int width, int height)
+        private readonly NovaGame _game;
+
+        public EmpireStatusConsole(int width, int height, NovaGame game)
             : base(width, height)
         {
+            _game = game;
+            _game.TurnManager.NewTurn += (_, __) => Refresh();
+
             DefaultBackground = ColorHelper.ControlBack;
 
             UseMouse = false;
@@ -28,7 +33,7 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
             var printTemplate = new ColoredGlyph(ColorHelper.Text, ColorHelper.ControlBack);
             Cursor.Right(2).Print("Dalinar Kholin\r\n", printTemplate, null);
             Cursor.Right(2).Print("High King of the Alethi Empire\r\n", printTemplate, null);
-            Cursor.Right(2).Print("Year: 0 Gold: 0", printTemplate, null);
+            Cursor.Right(2).Print($"Year: {_game.TurnManager.Turn} Gold: 0", printTemplate, null);
         }
     }
 }
