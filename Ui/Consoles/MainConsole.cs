@@ -6,6 +6,7 @@ using SadConsole;
 using SadConsole.Input;
 using SadConsole.UI.Controls;
 using SadRogue.Primitives;
+using System;
 using System.Diagnostics;
 
 namespace Novalia.Ui.Consoles
@@ -15,6 +16,9 @@ namespace Novalia.Ui.Consoles
     {
         private readonly IGameManager _gameManager;
         private readonly IUiManager _uiManager;
+        private readonly TransientMessageConsole _transientMessageConsole;
+
+        private DateTime _lastEndTurnAttempt;
 
         public MainConsole(
             IGameManager gameManager,
@@ -31,6 +35,8 @@ namespace Novalia.Ui.Consoles
 
             UseMouse = false;
             UseKeyboard = true;
+
+            _lastEndTurnAttempt = DateTime.MinValue;
 
             var minimap = new MinimapScreenSurface(
                 Map,
@@ -72,6 +78,11 @@ namespace Novalia.Ui.Consoles
             };
             buttonConsole.SetupSelectionButtons(endTurnButton);
 
+            _transientMessageConsole = new TransientMessageConsole(60)
+            {
+                Position = new Point(uiManager.ViewPortWidth - RightPaneWidth - 60, uiManager.ViewPortHeight - 1),
+            };
+
             Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
             Map.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
             Map.EndTurnRequested += (_, __) => Endturn();
@@ -82,6 +93,7 @@ namespace Novalia.Ui.Consoles
             Children.Add(selectionDetailsConsole);
             Children.Add(logConsole);
             Children.Add(buttonConsole);
+            Children.Add(_transientMessageConsole);
 
             if (debug)
             {
@@ -115,6 +127,18 @@ namespace Novalia.Ui.Consoles
 
         private void Endturn()
         {
+            var repeat = _lastEndTurnAttempt != DateTime.MinValue
+                && DateTime.UtcNow - _lastEndTurnAttempt < TimeSpan.FromSeconds(3);
+            if (!repeat && !Game.TurnManager.ReadyToEndTurn(Map, Map.PlayerEmpireId))
+            {
+                _lastEndTurnAttempt = DateTime.UtcNow;
+                _transientMessageConsole.Show("Units have movement remaining, repeat to confirm.");
+                return;
+            }
+
+            _lastEndTurnAttempt = DateTime.MinValue;
+            _transientMessageConsole.Hide();
+
             Game.TurnManager.EndTurn();
             Map.OnNewturn();
         }

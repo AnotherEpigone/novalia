@@ -94,6 +94,7 @@ namespace Novalia.Maps
 
         public bool HandleKeyboard(Keyboard keyboard)
         {
+            var ctrl = keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl);
             if (keyboard.IsKeyPressed(Keys.Enter))
             {
                 if (!SelectNextUnit())
@@ -101,6 +102,12 @@ namespace Novalia.Maps
                     EndTurnRequested?.Invoke(this, EventArgs.Empty);
                 }
 
+                return true;
+            }
+
+            if (ctrl && keyboard.IsKeyPressed(Keys.E))
+            {
+                EndTurnRequested?.Invoke(this, EventArgs.Empty);
                 return true;
             }
 
