@@ -183,7 +183,7 @@ namespace Novalia.Maps
 
         private IScreenSurface CreateWorldMapRenderer(
             ICellSurface surface,
-            IFont? font,
+            IFont font,
             Point? fontSize)
         {
             var renderer = new WorldMapRenderer(surface, font, fontSize.Value);

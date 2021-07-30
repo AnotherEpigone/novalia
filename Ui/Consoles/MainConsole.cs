@@ -17,8 +17,10 @@ namespace Novalia.Ui.Consoles
         private readonly IGameManager _gameManager;
         private readonly IUiManager _uiManager;
         private readonly TransientMessageConsole _transientMessageConsole;
+        private readonly AlertMessageConsole _alertMessageConsole;
 
         private DateTime _lastEndTurnAttempt;
+        private DateTime _lastReadyToEndTurnCheck;
 
         public MainConsole(
             IGameManager gameManager,
@@ -37,6 +39,7 @@ namespace Novalia.Ui.Consoles
             UseKeyboard = true;
 
             _lastEndTurnAttempt = DateTime.MinValue;
+            _lastReadyToEndTurnCheck = DateTime.MinValue;
 
             var minimap = new MinimapScreenSurface(
                 Map,
@@ -83,6 +86,11 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth - 60, uiManager.ViewPortHeight - 1),
             };
 
+            _alertMessageConsole = new AlertMessageConsole(60)
+            {
+                Position = new Point(uiManager.ViewPortWidth - RightPaneWidth - 60, uiManager.ViewPortHeight - 2),
+            };
+
             Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
             Map.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
             Map.EndTurnRequested += (_, __) => Endturn();
@@ -94,6 +102,7 @@ namespace Novalia.Ui.Consoles
             Children.Add(logConsole);
             Children.Add(buttonConsole);
             Children.Add(_transientMessageConsole);
+            Children.Add(_alertMessageConsole);
 
             if (debug)
             {
@@ -108,6 +117,21 @@ namespace Novalia.Ui.Consoles
         public NovaGame Game { get; }
 
         private string DebuggerDisplay => string.Format($"{nameof(MainConsole)} ({Position.X}, {Position.Y})");
+
+        public override void Update(TimeSpan delta)
+        {
+            base.Update(delta);
+
+            if (DateTime.UtcNow - _lastReadyToEndTurnCheck < TimeSpan.FromSeconds(0.5))
+            {
+                return;
+            }
+
+            if (Game.TurnManager.ReadyToEndTurn(Map, Map.PlayerEmpireId))
+            {
+                _alertMessageConsole.Show("Press ENTER to end turn.");
+            }
+        }
 
         public override bool ProcessKeyboard(Keyboard info)
         {
@@ -132,12 +156,14 @@ namespace Novalia.Ui.Consoles
             if (!repeat && !Game.TurnManager.ReadyToEndTurn(Map, Map.PlayerEmpireId))
             {
                 _lastEndTurnAttempt = DateTime.UtcNow;
-                _transientMessageConsole.Show("Units have movement remaining, repeat to confirm.");
+                _transientMessageConsole.Show("Units have movement remaining. Repeat to confirm.");
                 return;
             }
 
             _lastEndTurnAttempt = DateTime.MinValue;
             _transientMessageConsole.Hide();
+            _lastReadyToEndTurnCheck = DateTime.Now;
+            _alertMessageConsole.Hide();
 
             Game.TurnManager.EndTurn();
             Map.OnNewturn();
