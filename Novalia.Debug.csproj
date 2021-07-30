@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <StartupObject>Novalia.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.2.0" />
+    <PackageReference Include="GoRogue" Version="3.0.0-alpha04" />
+    <PackageReference Include="ini-parser" Version="2.5.2" />
+    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="SadConsole.Extended" Version="9.0.1" />
+    <PackageReference Include="SadConsole.Host.MonoGame" Version="9.1.0" />
+    <PackageReference Include="Troschuetz.Random" Version="5.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SadConsole\SadConsole\SadConsole.csproj" />
+    <ProjectReference Include="..\TheSadRogue.Integration.Debug\TheSadRogue.Integration\TheSadRogue.Integration.Debug.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Fonts\minimap.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\minimap.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\world.font">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Fonts\world.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

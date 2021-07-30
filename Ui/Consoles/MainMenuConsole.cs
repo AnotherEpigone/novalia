@@ -1,4 +1,5 @@
-﻿using Novalia.Serialization.Settings;
+﻿using Novalia.Maps.Generation;
+using Novalia.Serialization.Settings;
 using Novalia.Ui.Consoles.MainMenuPages;
 using Novalia.Ui.Controls;
 using SadConsole;
@@ -14,8 +15,10 @@ namespace Novalia.Ui.Consoles
     {
         private readonly NovaControlsConsole _menuConsole;
         private readonly SettingsConsole _settingsConsole;
+        private readonly MapOptionsConsole _mapOptionsConsole;
 
         private NovaControlsConsole _activeLowerConsole;
+        private MapGenerationSettings _mapSettings;
 
         public MainMenuConsole(IUiManager uiManager, IGameManager gameManager, IAppSettings appSettings, int width, int height)
         {
@@ -30,13 +33,21 @@ namespace Novalia.Ui.Consoles
             _settingsConsole = new SettingsConsole(uiManager, gameManager, appSettings, width, height - titleConsole.Height)
             {
                 Position = new Point(0, titleConsole.Height),
-                IsVisible = false
+                IsVisible = false,
             };
             _settingsConsole.Closed += (_, __) => FocusConsole(_menuConsole);
+
+            _mapOptionsConsole = new MapOptionsConsole(gameManager, width, height - titleConsole.Height)
+            {
+                Position = new Point(0, titleConsole.Height),
+                IsVisible = false,
+            };
+            _mapOptionsConsole.Closed += (_, __) => FocusConsole(_menuConsole);
 
             Children.Add(titleConsole);
             Children.Add(_menuConsole);
             Children.Add(_settingsConsole);
+            Children.Add(_mapOptionsConsole);
 
             FocusConsole(_menuConsole);
         }
@@ -78,7 +89,11 @@ namespace Novalia.Ui.Consoles
                 Text = "New Game",
                 Position = new Point(buttonX, topButtonY + 2),
             };
-            newGameButton.Click += (_, __) => gameManager.StartNewGame();
+            newGameButton.Click += (_, __) =>
+            {
+
+                FocusConsole(_mapOptionsConsole);
+            };
 
             var loadButton = new NovaSelectionButton(26, 1)
             {

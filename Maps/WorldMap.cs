@@ -97,7 +97,7 @@ namespace Novalia.Maps
             var ctrl = keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl);
             if (keyboard.IsKeyPressed(Keys.Enter))
             {
-                if (!SelectNextUnit())
+                if (!SelectNextUnit() && _selectedUnit?.RemainingMovement < 0.01)
                 {
                     EndTurnRequested?.Invoke(this, EventArgs.Empty);
                 }

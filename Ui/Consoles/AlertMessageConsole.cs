@@ -1,5 +1,6 @@
 ﻿using SadConsole;
 using SadRogue.Primitives;
+using System;
 using System.Diagnostics;
 using System.Linq;
 
@@ -9,7 +10,7 @@ namespace Novalia.Ui.Consoles
     /// Displays a single-line message that flashes.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class AlertMessageConsole : Console
+    public class AlertMessageConsole : SadConsole.Console
     {
         public AlertMessageConsole(int width)
             : base(width, 1)
@@ -24,6 +25,11 @@ namespace Novalia.Ui.Consoles
             IsVisible = false;
         }
 
+        public override void Update(TimeSpan delta)
+        {
+            base.Update(delta);
+        }
+
         public void Show(string message)
         {
             IsVisible = true;
@@ -34,7 +40,6 @@ namespace Novalia.Ui.Consoles
                 IgnoreEffect = false,
             };
 
-            // TODO make the flash work.
             var effect = new SadConsole.Effects.Fade
             {
                 AutoReverse = true,
@@ -42,12 +47,9 @@ namespace Novalia.Ui.Consoles
                 FadeForeground = true,
                 UseCellForeground = false,
                 Repeat = true,
-                FadeDuration = 0.7f,
-                RemoveOnFinished = true
+                FadeDuration = 0.7f
             };
-            Surface.Effects.SetEffect(Enumerable.Range(0, Surface.Area.Area - 1), effect);
-            Surface.IsDirty = true;
-
+            coloredMessage.SetEffect(effect);
             Cursor.Print(coloredMessage);
         }
 

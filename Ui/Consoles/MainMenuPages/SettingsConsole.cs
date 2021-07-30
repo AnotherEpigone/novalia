@@ -2,9 +2,11 @@
 using Novalia.Ui.Controls;
 using SadRogue.Primitives;
 using System;
+using System.Diagnostics;
 
 namespace Novalia.Ui.Consoles.MainMenuPages
 {
+    [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public class SettingsConsole : NovaControlsConsole
     {
         public SettingsConsole(IUiManager uiManager, IGameManager gameManager, IAppSettings appSettings, int width, int height)
@@ -95,5 +97,13 @@ namespace Novalia.Ui.Consoles.MainMenuPages
         }
 
         public event EventHandler Closed;
+
+        private string DebuggerDisplay
+        {
+            get
+            {
+                return string.Format($"{nameof(SettingsConsole)} ({Position.X}, {Position.Y})");
+            }
+        }
     }
 }

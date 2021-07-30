@@ -1,8 +1,10 @@
-﻿namespace Novalia
+﻿using Novalia.Maps.Generation;
+
+namespace Novalia
 {
     public interface IGameManager
     {
-        void StartNewGame();
+        void StartNewGame(MapGenerationSettings settings);
 
         void Save();
 

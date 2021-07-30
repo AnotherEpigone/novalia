@@ -3,6 +3,7 @@ using Novalia.Entities;
 using Novalia.GameMechanics;
 using Novalia.Logging;
 using Novalia.Maps;
+using Novalia.Maps.Generation;
 using Novalia.Maps.Generation.Steps;
 using Novalia.Serialization;
 using Novalia.Ui;
@@ -90,37 +91,20 @@ namespace Novalia
             _saveManager.Write(save);
         }
 
-        public void StartNewGame()
+        public void StartNewGame(MapGenerationSettings settings)
         {
             _logger.Debug("Starting new game.");
             var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
             var defaultFont = Game.Instance.DefaultFont;
 
-            var tileWidth = 80;
-            var tileHeight = 80;
             var rng = new StandardGenerator();
-            var continentsStep = new ContinentsGenerationStep(rng, 200, 0.3F);
-            var mapGenerator = new Generator(tileWidth, tileHeight)
-                .ConfigAndGenerateSafe(gen =>
-                {
-                    gen.AddSteps(continentsStep);
-                });
-
-            var generatedMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(continentsStep.ComponentTag);
 
             var sudet = new Empire(EmpireAtlas.Sudet);
             var blackhand = new Empire(EmpireAtlas.BlackhandDominion);
             var playerEmpire = sudet;
 
-            var map = new WorldMap(tileWidth, tileHeight, tilesetFont, playerEmpire.Id);
-            map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
-                GetViewportSizeInTiles(tilesetFont, defaultFont) - map.DefaultRenderer.Surface.View.Size);
-
-            foreach (var position in map.Positions())
-            {
-                var template = generatedMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.Ocean;
-                map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
-            }
+            var mapFactory = new WorldMapFactory();
+            var map = mapFactory.Create(settings, tilesetFont, GetViewportSizeInTiles(tilesetFont, defaultFont), playerEmpire.Id, rng);
 
             for (int i = 0; i < 2; i++)
             {

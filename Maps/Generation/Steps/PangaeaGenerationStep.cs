@@ -8,17 +8,17 @@ using Troschuetz.Random;
 
 namespace Novalia.Maps.Generation.Steps
 {
-    public class ContinentsGenerationStep : GenerationStep, INovaGenerationStep
+    public class PangaeaGenerationStep : GenerationStep, INovaGenerationStep
     {
         private readonly IGenerator _rng;
         private readonly int _maxIterations;
         private readonly float _landThreshold;
 
-        public ContinentsGenerationStep(IGenerator rng, int maxIterations, float landThreshold)
+        public PangaeaGenerationStep(IGenerator rng, int maxIterations, float landThreshold)
             : this("Continents", rng, maxIterations, landThreshold)
         {
         }
-        public ContinentsGenerationStep(string componentTag, IGenerator rng, int maxIterations, float landThreshold)
+        public PangaeaGenerationStep(string componentTag, IGenerator rng, int maxIterations, float landThreshold)
         {
             ComponentTag = componentTag;
             _rng = rng;
@@ -37,8 +37,8 @@ namespace Novalia.Maps.Generation.Steps
             while (!LandThresholdReached(continentsComponent))
             {
                 var focusPoint = new Point(
-                    _rng.Next(10, context.Width - 10),
-                    _rng.Next(10, context.Height - 10));
+                    _rng.Next(context.Width / 3, context.Width * 2 / 3),
+                    _rng.Next(context.Height / 3, context.Height * 2 / 3));
 
                 int iterations = _rng.Next(20, _maxIterations);
                 for (int i = 0; i < iterations; i++)
