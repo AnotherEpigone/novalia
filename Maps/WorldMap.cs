@@ -218,7 +218,7 @@ namespace Novalia.Maps
             {
                 AddEntity(new NovaEntity(
                     point,
-                    new Color(Color.White, 210),
+                    new Color(Color.White, alpha),
                     WorldGlyphAtlas.MovementPreview1 + turns - 1,
                     "step highlight - turn count",
                     true,
@@ -230,7 +230,7 @@ namespace Novalia.Maps
             {
                 AddEntity(new NovaEntity(
                     point,
-                    new Color(Color.White, 150),
+                    new Color(Color.White, alpha),
                     WorldGlyphAtlas.MovementPreview99plus,
                     "step highlight - turn count",
                     true,
@@ -243,7 +243,7 @@ namespace Novalia.Maps
                 // tens digit.
                 AddEntity(new NovaEntity(
                     point,
-                    new Color(Color.White, 150),
+                    new Color(Color.White, alpha),
                     WorldGlyphAtlas.MovementPreview10 + (turns / 10) - 1,
                     "step highlight - turn count",
                     true,
