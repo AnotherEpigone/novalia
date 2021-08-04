@@ -150,7 +150,11 @@ namespace Novalia.Maps
             {
                 MoveSelectedUnit(_pathOverlayTarget);
                 ClearPathOverlay();
-                SelectNextUnit();
+
+                if (SelectedUnit.RemainingMovement < 0.01)
+                {
+                    SelectNextUnit();
+                }
             }
 
             _rmbDown = false;
@@ -275,6 +279,12 @@ namespace Novalia.Maps
             if (_pathOverlayTarget == target)
             {
                 // don't recalculate for the same target
+                _rmbDown = true;
+                return;
+            }
+
+            if (!Terrain[target].IsWalkable)
+            {
                 _rmbDown = true;
                 return;
             }
