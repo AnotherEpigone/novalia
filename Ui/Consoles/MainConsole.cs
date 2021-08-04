@@ -127,7 +127,7 @@ namespace Novalia.Ui.Consoles
                 return;
             }
 
-            if (Game.TurnManager.ReadyToEndTurn(Map, Map.PlayerEmpireId))
+            if (Game.TurnManager.ReadyToEndTurn(Map, Map.PlayerEmpireId) && !_alertMessageConsole.IsVisible)
             {
                 _alertMessageConsole.Show("Press ENTER to end turn.");
             }

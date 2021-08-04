@@ -35,19 +35,20 @@ namespace Novalia.Ui.Consoles
             IsVisible = true;
             Surface.Clear();
             Cursor.Position = new Point(0, 0);
-            var coloredMessage = new ColoredString(message, Color.Gainsboro, DefaultBackground)
+            var coloredMessage = new ColoredString(message, ColorHelper.Text, DefaultBackground)
             {
                 IgnoreEffect = false,
             };
 
             var effect = new SadConsole.Effects.Fade
             {
+                StartDelay = 0.2d,
                 AutoReverse = true,
-                DestinationForeground = new ColorGradient(Color.Gainsboro, Color.Transparent),
+                DestinationForeground = new ColorGradient(ColorHelper.Text, ColorHelper.TextDisabled),
                 FadeForeground = true,
                 UseCellForeground = false,
                 Repeat = true,
-                FadeDuration = 0.7f
+                FadeDuration = 1d
             };
 
             coloredMessage.SetEffect(effect);
