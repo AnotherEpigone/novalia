@@ -70,7 +70,7 @@ namespace Novalia
             colors.Lines = new AdjustableColor(colors.Gray, "Lines", colors);
 
             colors.ControlForegroundNormal = new AdjustableColor(ColorHelper.Text, "Control Foreground Normal", colors);
-            colors.ControlForegroundDisabled = new AdjustableColor(colors.Gray, "Control Foreground Disabled", colors);
+            colors.ControlForegroundDisabled = new AdjustableColor(ColorHelper.TextDisabled, "Control Foreground Disabled", colors);
             colors.ControlForegroundMouseOver = new AdjustableColor(ColorHelper.TextBright, "Control Foreground MouseOver", colors);
             colors.ControlForegroundMouseDown = new AdjustableColor(ColorHelper.TextBright, "Control Foreground MouseDown", colors);
             colors.ControlForegroundSelected = new AdjustableColor(ColorHelper.TextBright, "Control Foreground Selected", colors);

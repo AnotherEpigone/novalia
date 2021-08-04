@@ -1,4 +1,5 @@
-﻿using Novalia.Maps.Generation;
+﻿using Novalia.GameMechanics.Setup;
+using Novalia.Maps.Generation;
 using Novalia.Ui.Controls;
 using SadConsole;
 using SadRogue.Primitives;
@@ -8,20 +9,14 @@ using System.Diagnostics;
 namespace Novalia.Ui.Consoles.MainMenuPages
 {
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public class MapOptionsConsole : NovaControlsConsole
+    public class MapOptionsConsole : NovaControlsConsole, IGameSetupStage
     {
         private readonly Rectangle _summaryBox;
 
-        public MapOptionsConsole(int width, int height)
+        public MapOptionsConsole(GameSetup gameSetup, int width, int height)
             : base(width, height)
         {
-            Settings = new MapGenerationSettings(ContinentGeneratorStyle.Continents, 40, 40);
-        }
-
-        public MapOptionsConsole(IGameManager gameManager, int width, int height)
-            : base(width, height)
-        {
-            Settings = MapGenerationSettings.Default;
+            GameSetup = gameSetup;
 
             _summaryBox = new Rectangle(width / 2 - 55, 0, 50, 30);
             Surface.DrawBox(
@@ -45,8 +40,8 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             };
             tinyButton.Click += (_, __) =>
             {
-                Settings.Width = 40;
-                Settings.Height = 40;
+                GameSetup.MapGenerationSettings.Width = 40;
+                GameSetup.MapGenerationSettings.Height = 40;
                 PrintSettings();
             };
             var mediumButton = new NovaSelectionButton(20, 1)
@@ -56,8 +51,8 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             };
             mediumButton.Click += (_, __) =>
             {
-                Settings.Width = 80;
-                Settings.Height = 80;
+                GameSetup.MapGenerationSettings.Width = 80;
+                GameSetup.MapGenerationSettings.Height = 80;
                 PrintSettings();
             };
             var largeButton = new NovaSelectionButton(20, 1)
@@ -67,8 +62,8 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             };
             largeButton.Click += (_, __) =>
             {
-                Settings.Width = 120;
-                Settings.Height = 120;
+                GameSetup.MapGenerationSettings.Width = 120;
+                GameSetup.MapGenerationSettings.Height = 120;
                 PrintSettings();
             };
 
@@ -81,7 +76,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             };
             continentsButton.Click += (_, __) =>
             {
-                Settings.ContinentGeneratorStyle = ContinentGeneratorStyle.Continents;
+                GameSetup.MapGenerationSettings.ContinentGeneratorStyle = ContinentGeneratorStyle.Continents;
                 PrintSettings();
             };
             var pangaeaButton = new NovaSelectionButton(20, 1)
@@ -91,16 +86,16 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             };
             pangaeaButton.Click += (_, __) =>
             {
-                Settings.ContinentGeneratorStyle = ContinentGeneratorStyle.Pangaea;
+                GameSetup.MapGenerationSettings.ContinentGeneratorStyle = ContinentGeneratorStyle.Pangaea;
                 PrintSettings();
             };
 
-            var launchButton = new NovaSelectionButton(20, 1)
+            var nextButton = new NovaSelectionButton(20, 1)
             {
-                Text = "Launch game",
+                Text = "Next",
                 Position = new Point(controlsBox.X + 15, controlsBox.Y + 18),
             };
-            launchButton.Click += (_, __) => gameManager.StartNewGame(Settings);
+            nextButton.Click += (_, __) => Next?.Invoke(this, EventArgs.Empty);
 
             var backButton = new NovaSelectionButton(20, 1)
             {
@@ -117,13 +112,16 @@ namespace Novalia.Ui.Consoles.MainMenuPages
                 tinyButton,
                 mediumButton,
                 largeButton,
-                launchButton,
+                nextButton,
                 backButton);
         }
 
         public event EventHandler Closed;
 
-        public MapGenerationSettings Settings { get; }
+        public event EventHandler Next;
+
+
+        public GameSetup GameSetup { get; }
 
         private void PrintSettings()
         {
@@ -132,9 +130,9 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             Cursor.Position = new Point(_summaryBox.X + 21, _summaryBox.Y + 2);
             Cursor.Print($"SETTINGS", printTemplate, null);
             Cursor.Position = new Point(_summaryBox.X + 2, _summaryBox.Y + 4);
-            Cursor.Print($"Map size: {Settings.Width} x {Settings.Height}", printTemplate, null);
+            Cursor.Print($"Map size: {GameSetup.MapGenerationSettings.Width} x {GameSetup.MapGenerationSettings.Height}", printTemplate, null);
             Cursor.Position = new Point(_summaryBox.X + 2, _summaryBox.Y + 5);
-            Cursor.Print($"Continent style: {Settings.ContinentGeneratorStyle}", printTemplate, null);
+            Cursor.Print($"Continent style: {GameSetup.MapGenerationSettings.ContinentGeneratorStyle}", printTemplate, null);
         }
 
         private string DebuggerDisplay

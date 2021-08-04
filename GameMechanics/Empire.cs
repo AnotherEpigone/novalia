@@ -15,10 +15,11 @@ namespace Novalia.GameMechanics
         }
 
         public Empire(EmpireTemplate template)
-            :this()
+            : this()
         {
             TemplateId = template.Id;
             Name = template.Name;
+            Leader = new Leader(template.DefaultLeader);
         }
 
         [DataMember]
@@ -32,6 +33,9 @@ namespace Novalia.GameMechanics
 
         [DataMember]
         public Guid Id { get; set; }
+
+        [DataMember]
+        public Leader Leader { get; set; }
 
         private string DebuggerDisplay => $"{nameof(Empire)}: {Name}";
     }

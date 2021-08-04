@@ -25,18 +25,22 @@ namespace Novalia.GameMechanics
 
         public static EmpireTemplate Sudet => new EmpireTemplate(
             "EMPIRE_SUDET",
-            "Kingdom of Sudet");
+            "Kingdom of Sudet",
+            LeaderAtlas.MagnanII);
 
         public static EmpireTemplate Havenshire => new EmpireTemplate(
             "EMPIRE_HAVENSHIRE",
-            "Havenshire");
+            "Havenshire",
+            LeaderAtlas.RanulfGoldenale);
 
         public static EmpireTemplate BlackhandDominion => new EmpireTemplate(
             "EMPIRE_BLACKHAND",
-            "Blackhand Dominion");
+            "Blackhand Dominion",
+            LeaderAtlas.Blackhand);
 
         public static EmpireTemplate Ayen => new EmpireTemplate(
             "EMPIRE_AYEN",
-            "Ayen");
+            "Ayen",
+            LeaderAtlas.Ortakias);
     }
 }

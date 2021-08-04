@@ -49,6 +49,7 @@ namespace Novalia.Ui.Consoles
                 Repeat = true,
                 FadeDuration = 0.7f
             };
+
             coloredMessage.SetEffect(effect);
             Cursor.Print(coloredMessage);
         }

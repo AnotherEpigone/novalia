@@ -1,4 +1,5 @@
-﻿using Novalia.Maps.Generation;
+﻿using Novalia.GameMechanics.Setup;
+using Novalia.Maps.Generation;
 using Novalia.Serialization.Settings;
 using Novalia.Ui.Consoles.MainMenuPages;
 using Novalia.Ui.Controls;
@@ -16,9 +17,9 @@ namespace Novalia.Ui.Consoles
         private readonly NovaControlsConsole _menuConsole;
         private readonly SettingsConsole _settingsConsole;
         private readonly MapOptionsConsole _mapOptionsConsole;
+        private readonly EmpireOptionsConsole _empireOptionsConsole;
 
         private NovaControlsConsole _activeLowerConsole;
-        private MapGenerationSettings _mapSettings;
 
         public MainMenuConsole(IUiManager uiManager, IGameManager gameManager, IAppSettings appSettings, int width, int height)
         {
@@ -37,17 +38,30 @@ namespace Novalia.Ui.Consoles
             };
             _settingsConsole.Closed += (_, __) => FocusConsole(_menuConsole);
 
-            _mapOptionsConsole = new MapOptionsConsole(gameManager, width, height - titleConsole.Height)
+            var setup = GameSetup.Default;
+            _mapOptionsConsole = new MapOptionsConsole(setup, width, height - titleConsole.Height)
             {
                 Position = new Point(0, titleConsole.Height),
                 IsVisible = false,
             };
+
+            _empireOptionsConsole = new EmpireOptionsConsole(setup, width, height - titleConsole.Height)
+            {
+                Position = new Point(0, titleConsole.Height),
+                IsVisible = false,
+            };
+
             _mapOptionsConsole.Closed += (_, __) => FocusConsole(_menuConsole);
+            _mapOptionsConsole.Next += (_, __) => FocusConsole(_empireOptionsConsole);
+
+            _empireOptionsConsole.Closed += (_, __) => FocusConsole(_mapOptionsConsole);
+            _empireOptionsConsole.Next += (_, __) => gameManager.StartNewGame(setup);
 
             Children.Add(titleConsole);
             Children.Add(_menuConsole);
             Children.Add(_settingsConsole);
             Children.Add(_mapOptionsConsole);
+            Children.Add(_empireOptionsConsole);
 
             FocusConsole(_menuConsole);
         }

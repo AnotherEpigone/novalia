@@ -1,10 +1,8 @@
-﻿using GoRogue.MapGeneration;
-using Novalia.Entities;
+﻿using Novalia.Entities;
 using Novalia.GameMechanics;
+using Novalia.GameMechanics.Setup;
 using Novalia.Logging;
-using Novalia.Maps;
 using Novalia.Maps.Generation;
-using Novalia.Maps.Generation.Steps;
 using Novalia.Serialization;
 using Novalia.Ui;
 using Novalia.Ui.Consoles;
@@ -91,7 +89,7 @@ namespace Novalia
             _saveManager.Write(save);
         }
 
-        public void StartNewGame(MapGenerationSettings settings)
+        public void StartNewGame(GameSetup setup)
         {
             _logger.Debug("Starting new game.");
             var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
@@ -99,17 +97,20 @@ namespace Novalia
 
             var rng = new StandardGenerator();
 
-            var sudet = new Empire(EmpireAtlas.Sudet);
             var blackhand = new Empire(EmpireAtlas.BlackhandDominion);
-            var playerEmpire = sudet;
 
             var mapFactory = new WorldMapFactory();
-            var map = mapFactory.Create(settings, tilesetFont, GetViewportSizeInTiles(tilesetFont, defaultFont), playerEmpire.Id, rng);
+            var map = mapFactory.Create(
+                setup.MapGenerationSettings,
+                tilesetFont,
+                GetViewportSizeInTiles(tilesetFont, defaultFont),
+                setup.PlayerEmpire.Id,
+                rng);
 
             for (int i = 0; i < 2; i++)
             {
                 var position = map.WalkabilityView.RandomPosition(true, rng);
-                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, sudet.Id, Color.Red);
+                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, setup.PlayerEmpire.Id, Color.Red);
                 map.AddEntity(unit);
 
                 position = map.WalkabilityView.RandomPosition(true, rng);
@@ -118,8 +119,8 @@ namespace Novalia
             }
 
             var game = new NovaGame(
-                playerEmpire.Id,
-                new Empire[] { sudet, blackhand },
+                setup.PlayerEmpire.Id,
+                new Empire[] { setup.PlayerEmpire, blackhand },
                 _turnManagerFactory.Create(0));
 
             Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);

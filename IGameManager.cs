@@ -1,10 +1,10 @@
-﻿using Novalia.Maps.Generation;
+﻿using Novalia.GameMechanics.Setup;
 
 namespace Novalia
 {
     public interface IGameManager
     {
-        void StartNewGame(MapGenerationSettings settings);
+        void StartNewGame(GameSetup settings);
 
         void Save();
 

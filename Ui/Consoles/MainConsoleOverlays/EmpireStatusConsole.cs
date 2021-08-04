@@ -30,9 +30,10 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
                 connectedLineStyle: ICellSurface.ConnectedLineThin);
             Cursor.Position = new Point(0, 1);
 
+            var playerEmpire = _game.Empires[_game.PlayerEmpireId];
             var printTemplate = new ColoredGlyph(ColorHelper.Text, ColorHelper.ControlBack);
-            Cursor.Right(2).Print("Dalinar Kholin\r\n", printTemplate, null);
-            Cursor.Right(2).Print("High King of the Alethi Empire\r\n", printTemplate, null);
+            Cursor.Right(2).Print($"{playerEmpire.Leader.Name}\r\n", printTemplate, null);
+            Cursor.Right(2).Print($"{playerEmpire.Name}\r\n", printTemplate, null);
             Cursor.Right(2).Print($"Year: {_game.TurnManager.Turn} Gold: 0", printTemplate, null);
         }
     }
