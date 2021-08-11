@@ -20,6 +20,7 @@ namespace Novalia.GameMechanics
             TemplateId = template.Id;
             Name = template.Name;
             Leader = new Leader(template.DefaultLeader);
+            Playable = template.Playable;
         }
 
         [DataMember]
@@ -36,6 +37,9 @@ namespace Novalia.GameMechanics
 
         [DataMember]
         public Leader Leader { get; set; }
+
+        [DataMember]
+        public bool Playable { get; set; }
 
         private string DebuggerDisplay => $"{nameof(Empire)}: {Name}";
     }
