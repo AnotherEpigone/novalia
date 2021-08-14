@@ -2,6 +2,7 @@
 using Novalia.GameMechanics;
 using Novalia.GameMechanics.Setup;
 using Novalia.Logging;
+using Novalia.Maps;
 using Novalia.Maps.Generation;
 using Novalia.Serialization;
 using Novalia.Ui;
@@ -9,6 +10,7 @@ using Novalia.Ui.Consoles;
 using SadConsole;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
+using System.Collections.Generic;
 using System.Linq;
 using Troschuetz.Random.Generators;
 
@@ -52,18 +54,18 @@ namespace Novalia
             var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
             var defaultFont = Game.Instance.DefaultFont;
             var game = new NovaGame(
-                gameState.PlayerEmpireId,
                 gameState.Empires,
-                _turnManagerFactory.Create(gameState.Turn));
+                _turnManagerFactory.Create(gameState.Turn, gameState.Empires));
             var map = gameState.Map;
             map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
                 GetViewportSizeInTiles(tilesetFont, defaultFont) - map.DefaultRenderer.Surface.View.Size);
 
-            Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, game);
+            var mapManager = new WorldMapManager(game, map);
+            mapManager.SelectNextUnit();
+
+            Game.Instance.Screen = _uiManager.CreateMapScreen(this, gameState.Map, mapManager, game);
             Game.Instance.DestroyDefaultStartingConsole();
             Game.Instance.Screen.IsFocused = true;
-
-            map.SelectNextUnit();
         }
 
         public void LoadLatest()
@@ -81,7 +83,6 @@ namespace Novalia
             var save = new GameState()
             {
                 Empires = mainConsole.Game.Empires.Values.ToArray(),
-                PlayerEmpireId = mainConsole.Game.PlayerEmpireId,
                 Map = mainConsole.Map,
                 Turn = mainConsole.Game.TurnManager.Turn,
             };
@@ -99,19 +100,30 @@ namespace Novalia
 
             var blackhand = new Empire(EmpireAtlas.BlackhandDominion);
 
+            var allEmpires = new List<Empire>(setup.PlayerEmpires)
+            {
+                blackhand,
+            };
+
+            var turnManager = _turnManagerFactory.Create(0, allEmpires);
+
             var mapFactory = new WorldMapFactory();
             var map = mapFactory.Create(
                 setup.MapGenerationSettings,
                 tilesetFont,
                 GetViewportSizeInTiles(tilesetFont, defaultFont),
-                setup.PlayerEmpire.Id,
                 rng);
 
             for (int i = 0; i < 2; i++)
             {
-                var position = map.WalkabilityView.RandomPosition(true, rng);
-                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, setup.PlayerEmpire.Id, Color.Red);
-                map.AddEntity(unit);
+                Point position;
+                NovaEntity unit;
+                foreach (var playerEmpire in setup.PlayerEmpires)
+                {
+                    position = map.WalkabilityView.RandomPosition(true, rng);
+                    unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, playerEmpire.Id, Color.Red);
+                    map.AddEntity(unit);
+                }
 
                 position = map.WalkabilityView.RandomPosition(true, rng);
                 unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, Color.Blue);
@@ -119,15 +131,15 @@ namespace Novalia
             }
 
             var game = new NovaGame(
-                setup.PlayerEmpire.Id,
-                new Empire[] { setup.PlayerEmpire, blackhand },
-                _turnManagerFactory.Create(0));
+                allEmpires,
+                turnManager);
 
-            Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, game);
+            var mapManager = new WorldMapManager(game, map);
+            mapManager.SelectNextUnit();
+
+            Game.Instance.Screen = _uiManager.CreateMapScreen(this, map, mapManager, game);
             Game.Instance.DestroyDefaultStartingConsole();
             Game.Instance.Screen.IsFocused = true;
-
-            map.SelectNextUnit();
         }
 
         private Point GetViewportSizeInTiles(IFont tilesetFont, IFont defaultFont)

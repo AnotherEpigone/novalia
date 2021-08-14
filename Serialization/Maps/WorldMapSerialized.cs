@@ -25,7 +25,6 @@ namespace Novalia.Serialization.Maps
         [DataMember] public string FontId;
         [DataMember] public Terrain[] Terrain;
         [DataMember] public Unit[] Units;
-        [DataMember] Guid PlayerEmpireId;
 
         public static implicit operator WorldMapSerialized(WorldMap map)
         {
@@ -36,7 +35,6 @@ namespace Novalia.Serialization.Maps
                 FontId = map.Font.Name,
                 Terrain = map.Terrain.ToEnumerable().Cast<Terrain>().ToArray(),
                 Units = map.Entities.Items.OfType<Unit>().ToArray(),
-                PlayerEmpireId = map.PlayerEmpireId,
             };
         }
 
@@ -45,8 +43,7 @@ namespace Novalia.Serialization.Maps
             var map = new WorldMap(
                 serialized.Width,
                 serialized.Height,
-                Game.Instance.Fonts[serialized.FontId],
-                serialized.PlayerEmpireId);
+                Game.Instance.Fonts[serialized.FontId]);
             foreach (var terrain in serialized.Terrain)
             {
                 map.SetTerrain(terrain);

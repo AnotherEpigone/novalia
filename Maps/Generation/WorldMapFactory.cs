@@ -1,4 +1,5 @@
 ﻿using GoRogue.MapGeneration;
+using Novalia.GameMechanics;
 using Novalia.Maps.Generation.Steps;
 using SadConsole;
 using SadRogue.Primitives;
@@ -14,7 +15,6 @@ namespace Novalia.Maps.Generation
             MapGenerationSettings settings,
             IFont tilesetFont,
             Point viewportSize,
-            Guid playerEmpireId,
             IGenerator rng)
         {
             var iterations = (int)((settings.Width + settings.Height) * 1.5);
@@ -33,7 +33,7 @@ namespace Novalia.Maps.Generation
 
             var generatedMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(((INovaGenerationStep)continentsStep).ComponentTag);
 
-            var map = new WorldMap(settings.Width, settings.Height, tilesetFont, playerEmpireId);
+            var map = new WorldMap(settings.Width, settings.Height, tilesetFont);
             map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
                 viewportSize - map.DefaultRenderer.Surface.View.Size);
 

@@ -7,9 +7,11 @@ namespace Novalia.GameMechanics
     {
         int Turn { get; }
 
+        Empire Current { get; }
+
         event EventHandler NewTurn;
 
         void EndTurn();
-        bool ReadyToEndTurn(WorldMap map, Guid playerEmpireId);
+        bool ReadyToEndTurn(WorldMap map);
     }
 }

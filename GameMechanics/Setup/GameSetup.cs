@@ -1,4 +1,5 @@
 ﻿using Novalia.Maps.Generation;
+using System.Collections.Generic;
 
 namespace Novalia.GameMechanics.Setup
 {
@@ -7,11 +8,11 @@ namespace Novalia.GameMechanics.Setup
         public static GameSetup Default => new GameSetup
         {
             MapGenerationSettings = MapGenerationSettings.Default,
-            PlayerEmpire = new Empire(EmpireAtlas.Sudet),
+            PlayerEmpires = new List<Empire> { new Empire(EmpireAtlas.Sudet) },
         };
 
         public MapGenerationSettings MapGenerationSettings { get; set; }
 
-        public Empire PlayerEmpire { get; set; }
+        public List<Empire> PlayerEmpires { get; init; }
     }
 }

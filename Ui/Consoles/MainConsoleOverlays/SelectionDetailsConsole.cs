@@ -6,17 +6,17 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
 {
     public class SelectionDetailsConsole : Console
     {
-        public SelectionDetailsConsole(int width, int height, WorldMap map, NovaGame game)
+        public SelectionDetailsConsole(int width, int height, WorldMapManager mapManager, WorldMap map, NovaGame game)
             : base(width, height)
         {
             DefaultBackground = ColorHelper.ControlBack;
 
             UseMouse = false;
 
-            Update(map, game);
+            Update(mapManager, map, game);
         }
 
-        public void Update(WorldMap map, NovaGame game)
+        public void Update(WorldMapManager mapManager, WorldMap map, NovaGame game)
         {
             this.Clear();
             this.Fill(background: ColorHelper.ControlBack);
@@ -28,19 +28,19 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
 
             var printTemplate = new ColoredGlyph(ColorHelper.Text, ColorHelper.ControlBack);
 
-            if (map.SelectedPoint != Point.None)
+            if (mapManager.SelectedPoint != Point.None)
             {
                 Cursor.Right(2).Print("Selected tile:\r\n", printTemplate, null);
-                Cursor.Right(2).Print($"{map.SelectedPoint} {map.GetTerrainAt<Terrain>(map.SelectedPoint).Name}\r\n\r\n", printTemplate, null);
+                Cursor.Right(2).Print($"{mapManager.SelectedPoint} {map.GetTerrainAt<Terrain>(mapManager.SelectedPoint).Name}\r\n\r\n", printTemplate, null);
             }
 
-            if (map.SelectedUnit != null)
+            if (mapManager.SelectedUnit != null)
             {
-                var empire = game.Empires[map.SelectedUnit.EmpireId];
+                var empire = game.Empires[mapManager.SelectedUnit.EmpireId];
                 Cursor.Right(2).Print("Selected unit:\r\n", printTemplate, null);
-                Cursor.Right(2).Print($"{map.SelectedUnit.Name} ({empire.Name})\r\n", printTemplate, null);
-                Cursor.Right(2).Print($"Health: {map.SelectedUnit.RemainingHealth}/{map.SelectedUnit.MaxHealth}\r\n", printTemplate, null);
-                Cursor.Right(2).Print($"Movement: {map.SelectedUnit.RemainingMovement}/{map.SelectedUnit.Movement}\r\n", printTemplate, null);
+                Cursor.Right(2).Print($"{mapManager.SelectedUnit.Name} ({empire.Name})\r\n", printTemplate, null);
+                Cursor.Right(2).Print($"Health: {mapManager.SelectedUnit.RemainingHealth}/{mapManager.SelectedUnit.MaxHealth}\r\n", printTemplate, null);
+                Cursor.Right(2).Print($"Movement: {mapManager.SelectedUnit.RemainingMovement}/{mapManager.SelectedUnit.Movement}\r\n", printTemplate, null);
             }
         }
     }

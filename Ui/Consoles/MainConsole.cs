@@ -1,10 +1,8 @@
-﻿using Novalia.GameMechanics;
-using Novalia.Maps;
+﻿using Novalia.Maps;
 using Novalia.Ui.Consoles.MainConsoleOverlays;
 using Novalia.Ui.Controls;
 using SadConsole;
 using SadConsole.Input;
-using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
@@ -16,6 +14,7 @@ namespace Novalia.Ui.Consoles
     {
         private readonly IGameManager _gameManager;
         private readonly IUiManager _uiManager;
+        private readonly WorldMapManager _mapManager;
         private readonly TransientMessageConsole _transientMessageConsole;
         private readonly AlertMessageConsole _alertMessageConsole;
 
@@ -26,11 +25,13 @@ namespace Novalia.Ui.Consoles
             IGameManager gameManager,
             IUiManager uiManager,
             WorldMap map,
+            WorldMapManager mapManager,
             NovaGame game,
             bool debug)
         {
             _gameManager = gameManager;
             _uiManager = uiManager;
+            _mapManager = mapManager;
 
             Map = map;
             Game = game;
@@ -55,7 +56,7 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 15),
             };
 
-            var selectionDetailsConsole = new SelectionDetailsConsole(RightPaneWidth, 15, Map, Game)
+            var selectionDetailsConsole = new SelectionDetailsConsole(RightPaneWidth, 15, _mapManager, Map, Game)
             {
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth, 20),
             };
@@ -91,9 +92,9 @@ namespace Novalia.Ui.Consoles
                 Position = new Point(uiManager.ViewPortWidth - RightPaneWidth - 60, uiManager.ViewPortHeight - 2),
             };
 
-            Map.SelectionChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
-            Map.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(Map, Game);
-            Map.EndTurnRequested += (_, __) => Endturn();
+            _mapManager.SelectionChanged += (_, __) => selectionDetailsConsole.Update(_mapManager, Map, Game);
+            _mapManager.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(_mapManager, Map, Game);
+            _mapManager.EndTurnRequested += (_, __) => Endturn();
 
             Children.Add(Map);
             Children.Add(minimap);
@@ -121,16 +122,17 @@ namespace Novalia.Ui.Consoles
         public override void Update(TimeSpan delta)
         {
             base.Update(delta);
+            _mapManager.Update(delta);
 
-            if (DateTime.UtcNow - _lastReadyToEndTurnCheck < TimeSpan.FromSeconds(0.5))
-            {
-                return;
-            }
-
-            if (Game.TurnManager.ReadyToEndTurn(Map, Map.PlayerEmpireId) && !_alertMessageConsole.IsVisible)
+            if (DateTime.UtcNow - _lastReadyToEndTurnCheck >= TimeSpan.FromSeconds(0.5)
+                && Game.TurnManager.Current.Playable
+                && Game.TurnManager.ReadyToEndTurn(Map)
+                && !_alertMessageConsole.IsVisible)
             {
                 _alertMessageConsole.Show("Press ENTER to end turn.");
             }
+
+            
         }
 
         public override bool ProcessKeyboard(Keyboard info)
@@ -141,7 +143,7 @@ namespace Novalia.Ui.Consoles
                 return true;
             }
 
-            if (Map.HandleKeyboard(info))
+            if (_mapManager.HandleKeyboard(info))
             {
                 return true;
             }
@@ -153,7 +155,7 @@ namespace Novalia.Ui.Consoles
         {
             var repeat = _lastEndTurnAttempt != DateTime.MinValue
                 && DateTime.UtcNow - _lastEndTurnAttempt < TimeSpan.FromSeconds(3);
-            if (!repeat && !Game.TurnManager.ReadyToEndTurn(Map, Map.PlayerEmpireId))
+            if (!repeat && !Game.TurnManager.ReadyToEndTurn(Map))
             {
                 _lastEndTurnAttempt = DateTime.UtcNow;
                 _transientMessageConsole.Show("Units have movement remaining. Repeat to confirm.");
@@ -166,7 +168,7 @@ namespace Novalia.Ui.Consoles
             _alertMessageConsole.Hide();
 
             Game.TurnManager.EndTurn();
-            Map.OnNewturn();
+            _mapManager.OnNewturn();
         }
     }
 }

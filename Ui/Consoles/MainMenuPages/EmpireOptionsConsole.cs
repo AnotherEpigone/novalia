@@ -18,26 +18,24 @@ namespace Novalia.Ui.Consoles.MainMenuPages
         private readonly NovaSelectionButton _newPlayerButton;
         private readonly NovaSelectionButton _nextButton;
         private readonly NovaSelectionButton _backButton;
-        private int _numberOfPlayers;
 
         public EmpireOptionsConsole(GameSetup gameSetup, int width, int height)
             : base(width, height)
         {
             GameSetup = gameSetup;
-            _numberOfPlayers = 1;
 
             _controlBox = new Rectangle(width / 2 + 40, 0, 30, 15);
 
             _newPlayerButton = new NovaSelectionButton(20, 1)
             {
-                IsEnabled = _numberOfPlayers < MaxPlayers,
+                IsEnabled = GameSetup.PlayerEmpires.Count < MaxPlayers,
                 Text = "Add player",
                 Position = new Point(_controlBox.X + 5, _controlBox.Y + 5),
             };
             _newPlayerButton.Click += (_, __) =>
             {
-                _numberOfPlayers++;
-                _newPlayerButton.IsEnabled = _numberOfPlayers < MaxPlayers;
+                GameSetup.PlayerEmpires.Add(new Empire(EmpireAtlas.Sudet));
+                _newPlayerButton.IsEnabled = GameSetup.PlayerEmpires.Count < MaxPlayers;
                 Refresh();
             };
 
@@ -69,10 +67,10 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             Surface.Clear();
             Controls.Clear();
 
-            for (int i = 0; i< _numberOfPlayers; i++)
+            for (int i = 0; i< GameSetup.PlayerEmpires.Count; i++)
             {
                 var playerBox = new Rectangle(Width / 2 - 70, i * 15, 105, 15);
-                PrintPlayerBox(playerBox, i);
+                PrintPlayerBox(playerBox, GameSetup.PlayerEmpires[i]);
             }
 
             Surface.DrawBox(
@@ -86,7 +84,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
                 _backButton);
         }
 
-        private void PrintPlayerBox(Rectangle playerBox, int playerIndex)
+        private void PrintPlayerBox(Rectangle playerBox, Empire empire)
         {
             Surface.DrawBox(
                 playerBox,
@@ -102,10 +100,10 @@ namespace Novalia.Ui.Consoles.MainMenuPages
 
             var leaderTextBox = new TextBox(20)
             {
-                Text = GameSetup.PlayerEmpire.Leader.Name,
+                Text = empire.Leader.Name,
                 Position = new Point(playerBox.X + 10, playerBox.Y + 1),
             };
-            leaderTextBox.TextChanged += (_, __) => GameSetup.PlayerEmpire.Leader.Name = leaderTextBox.Text;
+            leaderTextBox.TextChanged += (_, __) => empire.Leader.Name = leaderTextBox.Text;
 
             var playableEmpires = EmpireAtlas.ById.Values
                 .Where(e => e.Playable);
@@ -116,12 +114,13 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             ((SadConsole.UI.Themes.ListBoxTheme)selectionBox.Theme).DrawBorder = true;
             selectionBox.SelectedItemChanged += (_, e) =>
             {
-                GameSetup.PlayerEmpire = new Empire(EmpireAtlas.ByName[(string)e.Item]);
-                leaderTextBox.Text = GameSetup.PlayerEmpire.Leader.Name;
+                empire = new Empire(EmpireAtlas.ByName[(string)e.Item]);
+                leaderTextBox.Text = empire.Leader.Name;
             };
-            foreach (var empire in playableEmpires)
+
+            foreach (var playableEmpire in playableEmpires)
             {
-                selectionBox.Items.Add(empire.Name);
+                selectionBox.Items.Add(playableEmpire.Name);
             }
 
             Controls.Add(selectionBox);

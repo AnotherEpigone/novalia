@@ -25,9 +25,9 @@ namespace Novalia.Ui
         public string MiniMapFontPath { get; } = "Fonts\\minimap.font";
         public string MiniMapFontName { get; } = "Minimap";
 
-        public MainConsole CreateMapScreen(IGameManager gameManager, WorldMap map, NovaGame game)
+        public MainConsole CreateMapScreen(IGameManager gameManager, WorldMap map, WorldMapManager mapManager, NovaGame game)
         {
-            return new MainConsole(gameManager, this, map, game, _appSettings.Debug);
+            return new MainConsole(gameManager, this, map, mapManager, game, _appSettings.Debug);
         }
 
         public PopupMenuWindow CreatePopupMenu(IGameManager gameManager)
