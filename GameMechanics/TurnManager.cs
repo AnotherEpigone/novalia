@@ -35,7 +35,7 @@ namespace Novalia.GameMechanics
 
         public void EndTurn()
         {
-            _currentEmpireIndex = _currentEmpireIndex++ % _empires.Count;
+            _currentEmpireIndex = ++_currentEmpireIndex % _empires.Count;
             if(_currentEmpireIndex == 0)
             {
                 Turn++;

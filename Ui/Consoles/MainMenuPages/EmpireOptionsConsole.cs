@@ -70,7 +70,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             for (int i = 0; i< GameSetup.PlayerEmpires.Count; i++)
             {
                 var playerBox = new Rectangle(Width / 2 - 70, i * 15, 105, 15);
-                PrintPlayerBox(playerBox, GameSetup.PlayerEmpires[i]);
+                PrintPlayerBox(playerBox, i);
             }
 
             Surface.DrawBox(
@@ -84,7 +84,7 @@ namespace Novalia.Ui.Consoles.MainMenuPages
                 _backButton);
         }
 
-        private void PrintPlayerBox(Rectangle playerBox, Empire empire)
+        private void PrintPlayerBox(Rectangle playerBox, int empireIndex)
         {
             Surface.DrawBox(
                 playerBox,
@@ -100,10 +100,10 @@ namespace Novalia.Ui.Consoles.MainMenuPages
 
             var leaderTextBox = new TextBox(20)
             {
-                Text = empire.Leader.Name,
+                Text = GameSetup.PlayerEmpires[empireIndex].Leader.Name,
                 Position = new Point(playerBox.X + 10, playerBox.Y + 1),
             };
-            leaderTextBox.TextChanged += (_, __) => empire.Leader.Name = leaderTextBox.Text;
+            leaderTextBox.TextChanged += (_, __) => GameSetup.PlayerEmpires[empireIndex].Leader.Name = leaderTextBox.Text;
 
             var playableEmpires = EmpireAtlas.ById.Values
                 .Where(e => e.Playable);
@@ -114,8 +114,9 @@ namespace Novalia.Ui.Consoles.MainMenuPages
             ((SadConsole.UI.Themes.ListBoxTheme)selectionBox.Theme).DrawBorder = true;
             selectionBox.SelectedItemChanged += (_, e) =>
             {
-                empire = new Empire(EmpireAtlas.ByName[(string)e.Item]);
-                leaderTextBox.Text = empire.Leader.Name;
+                var newEmpire = new Empire(EmpireAtlas.ByName[(string)e.Item]);
+                GameSetup.PlayerEmpires[empireIndex] = newEmpire;
+                leaderTextBox.Text = newEmpire.Leader.Name;
             };
 
             foreach (var playableEmpire in playableEmpires)

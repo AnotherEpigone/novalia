@@ -72,7 +72,7 @@ namespace Novalia.Ui.Consoles
             };
             endTurnButton.Click += (_, __) =>
             {
-                Endturn();
+                CheckedEndTurn();
                 IsFocused = true;
             };
 
@@ -94,7 +94,7 @@ namespace Novalia.Ui.Consoles
 
             _mapManager.SelectionChanged += (_, __) => selectionDetailsConsole.Update(_mapManager, Map, Game);
             _mapManager.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(_mapManager, Map, Game);
-            _mapManager.EndTurnRequested += (_, __) => Endturn();
+            _mapManager.EndTurnRequested += (_, __) => CheckedEndTurn();
 
             Children.Add(Map);
             Children.Add(minimap);
@@ -132,7 +132,11 @@ namespace Novalia.Ui.Consoles
                 _alertMessageConsole.Show("Press ENTER to end turn.");
             }
 
-            
+            if (!Game.TurnManager.Current.Playable)
+            {
+                // TODO start AI here or check AI status here.
+                EndTurn();
+            }
         }
 
         public override bool ProcessKeyboard(Keyboard info)
@@ -151,7 +155,7 @@ namespace Novalia.Ui.Consoles
             return base.ProcessKeyboard(info);
         }
 
-        private void Endturn()
+        private void CheckedEndTurn()
         {
             var repeat = _lastEndTurnAttempt != DateTime.MinValue
                 && DateTime.UtcNow - _lastEndTurnAttempt < TimeSpan.FromSeconds(3);
@@ -167,6 +171,11 @@ namespace Novalia.Ui.Consoles
             _lastReadyToEndTurnCheck = DateTime.Now;
             _alertMessageConsole.Hide();
 
+            EndTurn();
+        }
+
+        private void EndTurn()
+        {
             Game.TurnManager.EndTurn();
             _mapManager.OnNewturn();
         }

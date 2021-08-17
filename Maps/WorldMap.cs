@@ -1,7 +1,4 @@
-﻿using GoRogue.Pathing;
-using Newtonsoft.Json;
-using Novalia.Entities;
-using Novalia.Fonts;
+﻿using Newtonsoft.Json;
 using Novalia.Serialization.Maps;
 using SadConsole;
 using SadConsole.Input;
@@ -9,7 +6,6 @@ using SadRogue.Integration.Maps;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Novalia.Maps
 {
