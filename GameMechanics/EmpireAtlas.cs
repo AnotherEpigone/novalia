@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SadRogue.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -37,24 +38,28 @@ namespace Novalia.GameMechanics
             "EMPIRE_SUDET",
             "Kingdom of Sudet",
             LeaderAtlas.MagnanII,
-            true);
+            true,
+            Color.Blue);
 
         public static EmpireTemplate Havenshire => new EmpireTemplate(
             "EMPIRE_HAVENSHIRE",
             "Havenshire",
             LeaderAtlas.RanulfGoldenale,
-            true);
+            true,
+            Color.Gold);
 
         public static EmpireTemplate BlackhandDominion => new EmpireTemplate(
             "EMPIRE_BLACKHAND",
             "Blackhand Dominion",
             LeaderAtlas.Blackhand,
-            false);
+            false,
+            Color.Black);
 
         public static EmpireTemplate Ayen => new EmpireTemplate(
             "EMPIRE_AYEN",
             "Ayen",
             LeaderAtlas.Ortakias,
-            true);
+            true,
+            Color.Red);
     }
 }

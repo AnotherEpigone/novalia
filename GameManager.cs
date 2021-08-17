@@ -121,12 +121,12 @@ namespace Novalia
                 foreach (var playerEmpire in setup.PlayerEmpires)
                 {
                     position = map.WalkabilityView.RandomPosition(true, rng);
-                    unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, playerEmpire.Id, Color.Red);
+                    unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, playerEmpire.Id, playerEmpire.Color);
                     map.AddEntity(unit);
                 }
 
                 position = map.WalkabilityView.RandomPosition(true, rng);
-                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, Color.Blue);
+                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, blackhand.Color);
                 map.AddEntity(unit);
             }
 

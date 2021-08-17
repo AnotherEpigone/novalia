@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SadRogue.Primitives;
+using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
@@ -21,6 +22,7 @@ namespace Novalia.GameMechanics
             Name = template.Name;
             Leader = new Leader(template.DefaultLeader);
             Playable = template.Playable;
+            Color = template.Color;
         }
 
         [DataMember]
@@ -40,6 +42,9 @@ namespace Novalia.GameMechanics
 
         [DataMember]
         public bool Playable { get; set; }
+
+        [DataMember]
+        public Color Color { get; set; }
 
         private string DebuggerDisplay => $"{nameof(Empire)}: {Name}";
     }
