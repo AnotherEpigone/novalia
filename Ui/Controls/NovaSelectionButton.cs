@@ -57,8 +57,8 @@ namespace Novalia.Ui.Controls
                 SelectPrevious();
                 return true;
             }
-
-            else if (info.IsKeyReleased(Keys.Down))
+            
+            if (info.IsKeyReleased(Keys.Down))
             {
                 SelectNext();
                 return true;

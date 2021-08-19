@@ -1,11 +1,14 @@
 ﻿using Novalia.Maps;
 using Novalia.Ui.Consoles.MainConsoleOverlays;
 using Novalia.Ui.Controls;
+using Novalia.Ui.Windows;
 using SadConsole;
 using SadConsole.Input;
+using SadConsole.UI;
 using SadRogue.Primitives;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Novalia.Ui.Consoles
 {
@@ -17,7 +20,9 @@ namespace Novalia.Ui.Consoles
         private readonly WorldMapManager _mapManager;
         private readonly TransientMessageConsole _transientMessageConsole;
         private readonly AlertMessageConsole _alertMessageConsole;
+        private readonly bool _multiplayer;
 
+        private bool _firstUpdate;
         private DateTime _lastEndTurnAttempt;
         private DateTime _lastReadyToEndTurnCheck;
 
@@ -41,6 +46,9 @@ namespace Novalia.Ui.Consoles
 
             _lastEndTurnAttempt = DateTime.MinValue;
             _lastReadyToEndTurnCheck = DateTime.MinValue;
+
+            _multiplayer = Game.Empires.Count(e => e.Value.Playable) > 1;
+            _firstUpdate = true;
 
             var minimap = new MinimapScreenSurface(
                 Map,
@@ -121,6 +129,17 @@ namespace Novalia.Ui.Consoles
 
         public override void Update(TimeSpan delta)
         {
+            if (_firstUpdate)
+            {
+                _firstUpdate = false;
+                if (_multiplayer)
+                {
+                    NovaMessageBox.Show("New turn", $"{Game.TurnManager.Current.Leader.Name}'s turn.", "Okay");
+                }
+
+                return;
+            }
+
             base.Update(delta);
             _mapManager.Update(delta);
 
@@ -178,6 +197,11 @@ namespace Novalia.Ui.Consoles
         {
             Game.TurnManager.EndTurn();
             _mapManager.OnNewturn();
+
+            if (_multiplayer && Game.TurnManager.Current.Playable)
+            {
+                NovaMessageBox.Show("New turn", $"{Game.TurnManager.Current.Leader.Name}'s turn.", "Okay");
+            }
         }
     }
 }
