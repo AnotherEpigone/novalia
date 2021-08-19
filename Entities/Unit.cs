@@ -96,33 +96,45 @@ namespace Novalia.Entities
 
             // TODO get the real movement cost
             var movementCost = 1;
+
+            if (!CurrentMap.WalkabilityView[target])
+            {
+                // detect combat
+                var targetUnit = CurrentMap.GetEntityAt<Unit>(target);
+                if (targetUnit?.EmpireId != EmpireId)
+                {
+                    RemainingMovement = Math.Max(0, RemainingMovement - movementCost);
+                    StatsChanged?.Invoke(this, EventArgs.Empty);
+                    return UnitMovementResult.Combat;
+                }
+
+                return UnitMovementResult.Blocked;
+            }
+
             RemainingMovement = Math.Max(0, RemainingMovement - movementCost);
             StatsChanged?.Invoke(this, EventArgs.Empty);
 
-            var oldPosition = Position;
             Position = target;
-            if (Position == oldPosition)
-            {
-                // TODO detect combat
-                return UnitMovementResult.Blocked;
-            }
 
             _flag.Position = Position;
             _selectionOverlay.Position = Position;
             return UnitMovementResult.Moved;
         }
 
-        private void HandleMapChange()
+        private void HandleAddedToMap()
         {
-            _flag.CurrentMap?.RemoveEntity(_flag);
             CurrentMap?.AddEntity(_flag);
-
-            _selectionOverlay.CurrentMap?.RemoveEntity(_flag);
             CurrentMap?.AddEntity(_selectionOverlay);
         }
 
-        private void Unit_RemovedFromMap(object sender, GameObjectCurrentMapChanged e) => HandleMapChange();
+        private void HandleRemovedFromMap()
+        {
+            _flag.CurrentMap?.RemoveEntity(_flag);
+            _selectionOverlay.CurrentMap?.RemoveEntity(_selectionOverlay);
+        }
 
-        private void Unit_AddedToMap(object sender, GameObjectCurrentMapChanged e) => HandleMapChange();
+        private void Unit_RemovedFromMap(object sender, GameObjectCurrentMapChanged e) => HandleRemovedFromMap();
+
+        private void Unit_AddedToMap(object sender, GameObjectCurrentMapChanged e) => HandleAddedToMap();
     }
 }

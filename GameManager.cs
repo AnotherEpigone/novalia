@@ -1,5 +1,6 @@
 ﻿using Novalia.Entities;
 using Novalia.GameMechanics;
+using Novalia.GameMechanics.Combat;
 using Novalia.GameMechanics.Setup;
 using Novalia.Logging;
 using Novalia.Maps;
@@ -23,19 +24,22 @@ namespace Novalia
         private readonly ILogger _logger;
         private readonly ISaveManager _saveManager;
         private readonly ITurnManagerFactory _turnManagerFactory;
+        private readonly ICombatManagerFactory _combatManagerFactory;
 
         public GameManager(
             IUiManager uiManager,
             IEntityFactory entityFactory,
             ILogger logger,
             ISaveManager saveManager,
-            ITurnManagerFactory turnManagerFactory)
+            ITurnManagerFactory turnManagerFactory,
+            ICombatManagerFactory combatManagerFactory)
         {
             _uiManager = uiManager;
             _entityFactory = entityFactory;
             _logger = logger;
             _saveManager = saveManager;
             _turnManagerFactory = turnManagerFactory;
+            _combatManagerFactory = combatManagerFactory;
         }
 
         public bool CanLoad()
@@ -51,11 +55,13 @@ namespace Novalia
                 throw new System.IO.IOException("Failed to load save file.");
             }
 
+            var rng = new StandardGenerator();
             var tilesetFont = Game.Instance.Fonts[_uiManager.TileFontName];
             var defaultFont = Game.Instance.DefaultFont;
             var game = new NovaGame(
                 gameState.Empires,
-                _turnManagerFactory.Create(gameState.Turn, gameState.Empires));
+                _turnManagerFactory.Create(gameState.Turn, gameState.Empires),
+                _combatManagerFactory.Create(rng));
             var map = gameState.Map;
             map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
                 GetViewportSizeInTiles(tilesetFont, defaultFont) - map.DefaultRenderer.Surface.View.Size);
@@ -105,8 +111,6 @@ namespace Novalia
                 blackhand,
             };
 
-            var turnManager = _turnManagerFactory.Create(0, allEmpires);
-
             var mapFactory = new WorldMapFactory();
             var map = mapFactory.Create(
                 setup.MapGenerationSettings,
@@ -132,7 +136,8 @@ namespace Novalia
 
             var game = new NovaGame(
                 allEmpires,
-                turnManager);
+                _turnManagerFactory.Create(0, allEmpires),
+                _combatManagerFactory.Create(rng));
 
             var mapManager = new WorldMapManager(game, map);
             mapManager.SelectNextUnit();

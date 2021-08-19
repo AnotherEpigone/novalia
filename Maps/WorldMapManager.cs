@@ -1,6 +1,7 @@
 ﻿using GoRogue.Pathing;
 using Novalia.Entities;
 using Novalia.Fonts;
+using Novalia.GameMechanics.Combat;
 using SadConsole.Input;
 using SadRogue.Primitives;
 using System;
@@ -32,6 +33,7 @@ namespace Novalia.Maps
         public event EventHandler SelectionChanged;
         public event EventHandler SelectionStatsChanged;
         public event EventHandler EndTurnRequested;
+        public event EventHandler<CombatContext> Combat;
 
         public Point SelectedPoint { get; private set; }
 
@@ -115,7 +117,7 @@ namespace Novalia.Maps
             return false;
         }
 
-        public void Update(TimeSpan delta)
+        public void Update()
         {
             if (_pathOverlayVisible && !_rmbDown)
             {
@@ -240,10 +242,22 @@ namespace Novalia.Maps
 
             foreach (var step in path.Steps)
             {
-                if (SelectedUnit.TryMove(step) != UnitMovementResult.Moved)
+                var result = SelectedUnit.TryMove(step);
+                switch (result)
                 {
-                    break;
-                }
+                    case UnitMovementResult.NoMovement:
+                    case UnitMovementResult.Blocked:
+                        break;
+                    case UnitMovementResult.Moved:
+                        continue;
+                    case UnitMovementResult.Combat:
+                        Combat?.Invoke(
+                            this,
+                            new CombatContext(SelectedUnit.Position, target));
+                        break;
+                };
+
+                break;
             }
 
             SelectedPoint = SelectedUnit.Position;

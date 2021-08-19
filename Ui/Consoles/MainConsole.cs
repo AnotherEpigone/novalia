@@ -103,6 +103,7 @@ namespace Novalia.Ui.Consoles
             _mapManager.SelectionChanged += (_, __) => selectionDetailsConsole.Update(_mapManager, Map, Game);
             _mapManager.SelectionStatsChanged += (_, __) => selectionDetailsConsole.Update(_mapManager, Map, Game);
             _mapManager.EndTurnRequested += (_, __) => CheckedEndTurn();
+            _mapManager.Combat += (_, e) => Game.CombatManager.Combat(Map, e);
 
             Children.Add(Map);
             Children.Add(minimap);
@@ -141,7 +142,7 @@ namespace Novalia.Ui.Consoles
             }
 
             base.Update(delta);
-            _mapManager.Update(delta);
+            _mapManager.Update();
 
             if (DateTime.UtcNow - _lastReadyToEndTurnCheck >= TimeSpan.FromSeconds(0.5)
                 && Game.TurnManager.Current.Playable

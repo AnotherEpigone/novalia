@@ -3,6 +3,7 @@ using log4net;
 using log4net.Config;
 using Novalia.Entities;
 using Novalia.GameMechanics;
+using Novalia.GameMechanics.Combat;
 using Novalia.Logging;
 using Novalia.Serialization;
 using Novalia.Serialization.Settings;
@@ -35,6 +36,9 @@ namespace Novalia
 
             builder.RegisterType<TurnManagerFactory>()
                 .As<ITurnManagerFactory>()
+                .SingleInstance();
+            builder.RegisterType<CombatManagerFactory>()
+                .As<ICombatManagerFactory>()
                 .SingleInstance();
 
             builder.RegisterType<AppSettings>()
