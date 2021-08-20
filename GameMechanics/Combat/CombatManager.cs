@@ -15,17 +15,29 @@ namespace Novalia.GameMechanics.Combat
 
         public void Combat(WorldMap map, CombatContext context)
         {
-            // todo real strengths
             var defender = map.GetEntityAt<Unit>(context.Defender);
             var attacker = map.GetEntityAt<Unit>(context.Attacker);
-            var attackerStrength = 1;
-            var defenderStrength = 1;
+            var attackerStrength = attacker.EffectiveStrength;
+            var defenderStrength = defender.EffectiveStrength;
 
             var total = attackerStrength + defenderStrength;
-            var result = _rng.NextDouble(total);
-            if (result >= defenderStrength)
+            while (defender.RemainingHealth > 0 && attacker.RemainingHealth > 0)
             {
-                // attacker wins
+                var result = _rng.NextDouble(total);
+                if (result >= defenderStrength)
+                {
+                    // attacker wins the round
+                    defender.RemainingHealth -= 5;
+                }
+                else
+                {
+                    attacker.RemainingHealth -= 5;
+                }
+            }
+
+            if (defender.RemainingHealth <= 0)
+            {
+                // attacker wins, defender dies
                 map.RemoveEntity(defender);
                 attacker.TryMove(context.Defender);
             }

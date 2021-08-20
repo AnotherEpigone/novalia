@@ -27,6 +27,7 @@ namespace Novalia.Serialization.Entities
         [DataMember] float RemainingMovement;
         [DataMember] int MaxHealth;
         [DataMember] float RemainingHealth;
+        [DataMember] int Strength;
 
         public static implicit operator UnitSerialized(Unit unit)
         {
@@ -41,6 +42,7 @@ namespace Novalia.Serialization.Entities
                 RemainingMovement = unit.RemainingMovement,
                 MaxHealth = unit.MaxHealth,
                 RemainingHealth = unit.RemainingHealth,
+                Strength = unit.Strength,
             };
         }
 
@@ -59,7 +61,8 @@ namespace Novalia.Serialization.Entities
                 serialized.EmpireColor,
                 serialized.TemplateId,
                 serialized.Movement,
-                serialized.MaxHealth)
+                serialized.MaxHealth,
+                serialized.Strength)
             {
                 RemainingMovement = serialized.RemainingMovement,
                 RemainingHealth = serialized.RemainingHealth,

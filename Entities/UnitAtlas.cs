@@ -29,6 +29,7 @@ namespace Novalia.Entities
             "Cave troll",
             WorldGlyphAtlas.Unit_CaveTroll,
             2,
-            100);
+            100,
+            10);
     }
 }

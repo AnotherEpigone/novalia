@@ -20,7 +20,8 @@ namespace Novalia.Entities
                 empireColor,
                 template.Id,
                 template.Movement,
-                template.MaxHealth);
+                template.MaxHealth,
+                template.Strength);
 
             return unit;
         }

@@ -36,7 +36,8 @@ namespace Novalia.Entities
                 Color empireColor,
                 string templateId,
                 float movement,
-                int maxHealth)
+                int maxHealth,
+                int strength)
             : base(position, glyph, name, walkable, transparent, layer, id)
         {
             EmpireId = empireId;
@@ -45,6 +46,7 @@ namespace Novalia.Entities
             Movement = movement;
             RemainingMovement = movement;
             MaxHealth = maxHealth;
+            Strength = strength;
             RemainingHealth = maxHealth;
             Selected = false;
 
@@ -71,9 +73,11 @@ namespace Novalia.Entities
         public float RemainingMovement { get; set; }
         public int MaxHealth { get; }
         public float RemainingHealth { get; set; }
+        public int Strength { get; }
         public bool Selected { get; private set; }
 
         public DateTime LastSelected { get; private set; }
+        public int EffectiveStrength => Strength - (int)((MaxHealth - RemainingHealth) / MaxHealth * Strength * 0.8);
 
         private string DebuggerDisplay => $"{nameof(Unit)}: {Name}";
 
