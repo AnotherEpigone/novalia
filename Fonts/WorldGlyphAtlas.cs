@@ -14,6 +14,9 @@
         public const int Unit_CaveTroll = 4;
         public const int Unit_Spearman = 40;
 
+        // Improvements
+        public const int City = 41;
+
         // Gui
         public const int UnitBanner = 8;
         public const int SelectionOverlay = 9;
