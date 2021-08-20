@@ -31,5 +31,13 @@ namespace Novalia.Entities
             2,
             100,
             10);
+
+        public static UnitTemplate Spearman => new UnitTemplate(
+            "UNIT_SPEARMAN",
+            "Spearman",
+            WorldGlyphAtlas.Unit_Spearman,
+            2,
+            100,
+            4);
     }
 }

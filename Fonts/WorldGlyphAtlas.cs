@@ -12,6 +12,7 @@
 
         // Units
         public const int Unit_CaveTroll = 4;
+        public const int Unit_Spearman = 40;
 
         // Gui
         public const int UnitBanner = 8;

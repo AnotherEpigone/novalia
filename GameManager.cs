@@ -118,19 +118,21 @@ namespace Novalia
                 GetViewportSizeInTiles(tilesetFont, defaultFont),
                 rng);
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 5; i++)
             {
-                Point position;
-                NovaEntity unit;
                 foreach (var playerEmpire in setup.PlayerEmpires)
                 {
-                    position = map.WalkabilityView.RandomPosition(true, rng);
-                    unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, playerEmpire.Id, playerEmpire.Color);
+                    var position = map.WalkabilityView.RandomPosition(true, rng);
+                    var unit = _entityFactory.CreateUnit(position, UnitAtlas.Spearman, playerEmpire.Id, playerEmpire.Color);
                     map.AddEntity(unit);
                 }
+            }
 
-                position = map.WalkabilityView.RandomPosition(true, rng);
-                unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, blackhand.Color);
+
+            for (int i = 0; i < 2; i++)
+            {
+                var position = map.WalkabilityView.RandomPosition(true, rng);
+                var unit = _entityFactory.CreateUnit(position, UnitAtlas.CaveTroll, blackhand.Id, blackhand.Color);
                 map.AddEntity(unit);
             }
 
