@@ -5,11 +5,12 @@ namespace Novalia.GameMechanics
 {
     public interface ITurnManager
     {
-        int Turn { get; }
+        int Round { get; }
 
         Empire Current { get; }
 
         event EventHandler NewTurn;
+        event EventHandler NewRound;
 
         void EndTurn();
         bool ReadyToEndTurn(WorldMap map);

@@ -11,17 +11,18 @@ namespace Novalia.GameMechanics
         private readonly List<Empire> _empires;
         private int _currentEmpireIndex;
 
-        public TurnManager(int turn, IEnumerable<Empire> empires)
+        public TurnManager(int round, IEnumerable<Empire> empires)
         {
-            Turn = turn;
+            Round = round;
             _empires = empires.ToList();
 
             _currentEmpireIndex = 0;
         }
 
         public event EventHandler NewTurn;
+        public event EventHandler NewRound;
 
-        public int Turn { get; private set; }
+        public int Round { get; private set; }
 
         public Empire Current => _empires[_currentEmpireIndex];
 
@@ -38,7 +39,8 @@ namespace Novalia.GameMechanics
             _currentEmpireIndex = ++_currentEmpireIndex % _empires.Count;
             if(_currentEmpireIndex == 0)
             {
-                Turn++;
+                Round++;
+                NewRound?.Invoke(this, EventArgs.Empty);
             }
 
             NewTurn?.Invoke(this, EventArgs.Empty);

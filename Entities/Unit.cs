@@ -121,6 +121,8 @@ namespace Novalia.Entities
             return UnitMovementResult.Moved;
         }
 
+        public bool HasMovement() => RemainingMovement > 0.01;
+
         private void HandleAddedToMap()
         {
             CurrentMap?.AddEntity(_flag);

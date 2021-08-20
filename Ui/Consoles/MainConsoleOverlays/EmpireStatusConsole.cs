@@ -34,7 +34,7 @@ namespace Novalia.Ui.Consoles.MainConsoleOverlays
             var printTemplate = new ColoredGlyph(ColorHelper.Text, ColorHelper.ControlBack);
             Cursor.Right(2).Print($"{playerEmpire.Leader.Name}\r\n", printTemplate, null);
             Cursor.Right(2).Print($"{playerEmpire.Name}\r\n", printTemplate, null);
-            Cursor.Right(2).Print($"Year: {_game.TurnManager.Turn} Gold: 0", printTemplate, null);
+            Cursor.Right(2).Print($"Year: {_game.TurnManager.Round} Gold: 0", printTemplate, null);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GoRogue.Pathing;
+﻿using GoRogue.GameFramework;
+using GoRogue.Pathing;
 using Novalia.Entities;
 using Novalia.Fonts;
 using Novalia.GameMechanics.Combat;
@@ -45,24 +46,32 @@ namespace Novalia.Maps
                 if (_selectedUnit != null)
                 {
                     _selectedUnit.StatsChanged -= SelectionStatsChanged;
+                    _selectedUnit.RemovedFromMap -= SelectedUnit_RemovedFromMap;
                 }
 
                 _selectedUnit = value;
                 if (_selectedUnit != null)
                 {
                     _selectedUnit.StatsChanged += SelectionStatsChanged;
+                    _selectedUnit.RemovedFromMap += SelectedUnit_RemovedFromMap;
                 }
             }
         }
 
-        public void OnNewturn()
+        public void OnNewTurn()
+        {
+            if (_game.TurnManager.Current.Playable)
+            {
+                SelectNextUnit();
+            }
+        }
+
+        public void OnNewRound()
         {
             foreach (var unit in _map.Entities.Items.OfType<Unit>())
             {
                 unit.RemainingMovement = unit.Movement;
             }
-
-            SelectNextUnit();
         }
 
         public bool HandleKeyboard(Keyboard keyboard)
@@ -70,7 +79,7 @@ namespace Novalia.Maps
             var ctrl = keyboard.IsKeyDown(Keys.LeftControl) || keyboard.IsKeyDown(Keys.RightControl);
             if (keyboard.IsKeyPressed(Keys.Enter))
             {
-                if (!SelectNextUnit() && _selectedUnit?.RemainingMovement < 0.01)
+                if (!SelectNextUnit() && !(_selectedUnit?.HasMovement() ?? false))
                 {
                     EndTurnRequested?.Invoke(this, EventArgs.Empty);
                 }
@@ -124,7 +133,7 @@ namespace Novalia.Maps
                 MoveSelectedUnit(_pathOverlayTarget);
                 ClearPathOverlay();
 
-                if (SelectedUnit.RemainingMovement < 0.01)
+                if (SelectedUnit == null || !SelectedUnit.HasMovement())
                 {
                     SelectNextUnit();
                 }
@@ -138,7 +147,7 @@ namespace Novalia.Maps
             var moveableUnit = _map.Entities.Items
                     .OfType<Unit>()
                     .Where(e => e.EmpireId == _game.TurnManager.Current.Id
-                        && e.RemainingMovement > 0.01
+                        && e.HasMovement()
                         && e != SelectedUnit)
                     .OrderBy(u => u.LastSelected)
                     .FirstOrDefault();
@@ -254,13 +263,18 @@ namespace Novalia.Maps
                         Combat?.Invoke(
                             this,
                             new CombatContext(SelectedUnit.Position, target));
+                        if (SelectedUnit == null || !SelectedUnit.HasMovement())
+                        {
+                            SelectNextUnit();
+                        }
+
                         break;
                 };
 
                 break;
             }
 
-            SelectedPoint = SelectedUnit.Position;
+            SelectedPoint = SelectedUnit?.Position ?? Point.None;
         }
 
         private void Map_RightMouseButtonDown(object sender, MouseScreenObjectState e)
@@ -346,6 +360,12 @@ namespace Novalia.Maps
             }
 
             SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void SelectedUnit_RemovedFromMap(object sender, GameObjectCurrentMapChanged e)
+        {
+            SelectedUnit = null;
+            SelectNextUnit();
         }
     }
 }

@@ -90,7 +90,7 @@ namespace Novalia
             {
                 Empires = mainConsole.Game.Empires.Values.ToArray(),
                 Map = mainConsole.Map,
-                Turn = mainConsole.Game.TurnManager.Turn,
+                Turn = mainConsole.Game.TurnManager.Round,
             };
 
             _saveManager.Write(save);
