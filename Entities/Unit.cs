@@ -23,6 +23,7 @@ namespace Novalia.Entities
     {
         private readonly NovaEntity _flag;
         private readonly NovaEntity _selectionOverlay;
+        private float _remainingHealth;
 
         public Unit(
                 Point position,
@@ -72,7 +73,15 @@ namespace Novalia.Entities
         public float Movement { get; }
         public float RemainingMovement { get; set; }
         public int MaxHealth { get; }
-        public float RemainingHealth { get; set; }
+        public float RemainingHealth
+        {
+            get => _remainingHealth;
+            set
+            {
+                _remainingHealth = value;
+                StatsChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
         public int Strength { get; }
         public bool Selected { get; private set; }
 
@@ -123,6 +132,14 @@ namespace Novalia.Entities
             _flag.Position = Position;
             _selectionOverlay.Position = Position;
             return UnitMovementResult.Moved;
+        }
+
+        public void MagicMove(Point target)
+        {
+            Position = target;
+
+            _flag.Position = Position;
+            _selectionOverlay.Position = Position;
         }
 
         public bool HasMovement() => RemainingMovement > 0.01;

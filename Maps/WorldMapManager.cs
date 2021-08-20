@@ -22,6 +22,7 @@ namespace Novalia.Maps
         private bool _rmbDown;
         private bool _pathOverlayVisible;
         private Unit _selectedUnit;
+        private Point _selectedPoint;
 
         public WorldMapManager(NovaGame game, WorldMap map)
         {
@@ -36,7 +37,15 @@ namespace Novalia.Maps
         public event EventHandler EndTurnRequested;
         public event EventHandler<CombatContext> Combat;
 
-        public Point SelectedPoint { get; private set; }
+        public Point SelectedPoint
+        {
+            get => _selectedPoint;
+            private set
+            {
+                _selectedPoint = value;
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
 
         public Unit SelectedUnit
         {
@@ -55,6 +64,8 @@ namespace Novalia.Maps
                     _selectedUnit.StatsChanged += SelectionStatsChanged;
                     _selectedUnit.RemovedFromMap += SelectedUnit_RemovedFromMap;
                 }
+
+                SelectionChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -345,7 +356,6 @@ namespace Novalia.Maps
             if (SelectedPoint == e.CellPosition)
             {
                 SelectedPoint = Point.None;
-                SelectionChanged?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
@@ -358,8 +368,6 @@ namespace Novalia.Maps
                 clickedUnit.ToggleSelected();
                 SelectedUnit = clickedUnit;
             }
-
-            SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void SelectedUnit_RemovedFromMap(object sender, GameObjectCurrentMapChanged e)

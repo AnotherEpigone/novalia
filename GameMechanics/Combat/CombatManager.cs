@@ -39,7 +39,7 @@ namespace Novalia.GameMechanics.Combat
             {
                 // attacker wins, defender dies
                 map.RemoveEntity(defender);
-                attacker.TryMove(context.Defender);
+                attacker.MagicMove(context.Defender);
             }
             else
             {
