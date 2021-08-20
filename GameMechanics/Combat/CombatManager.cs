@@ -22,8 +22,8 @@ namespace Novalia.GameMechanics.Combat
             var defenderStrength = 1;
 
             var total = attackerStrength + defenderStrength;
-            var result = _rng.Next(total);
-            if (result > defenderStrength)
+            var result = _rng.NextDouble(total);
+            if (result >= defenderStrength)
             {
                 // attacker wins
                 map.RemoveEntity(defender);
