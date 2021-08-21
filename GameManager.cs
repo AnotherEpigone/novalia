@@ -128,6 +128,13 @@ namespace Novalia
                 }
             }
 
+            foreach (var playerEmpire in setup.PlayerEmpires)
+            {
+                var position = map.WalkabilityView.RandomPosition(true, rng);
+                var city = _entityFactory.CreateCity(position, "Anathema", CityAtlas.HumanTown, playerEmpire.Id, playerEmpire.Color);
+                map.AddEntity(city);
+            }
+
 
             for (int i = 0; i < 2; i++)
             {

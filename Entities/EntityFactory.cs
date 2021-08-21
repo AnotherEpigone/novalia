@@ -25,5 +25,19 @@ namespace Novalia.Entities
 
             return unit;
         }
+
+        public NovaEntity CreateCity(Point position, string name, CityTemplate template, Guid empireId, Color empireColor)
+        {
+            var city = new City(
+                position,
+                template.Glyph,
+                name,
+                Guid.NewGuid(),
+                empireId,
+                empireColor,
+                template.Id);
+
+            return city;
+        }
     }
 }
