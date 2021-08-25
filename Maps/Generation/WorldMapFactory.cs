@@ -26,13 +26,13 @@ namespace Novalia.Maps.Generation
                 ContinentGeneratorStyle.Pangaea => new PangaeaGenerationStep(rng, landmassIterations, 0.3F),
                 _ => throw new ArgumentException("Unsupported continent generator style."),
             };
-            var forestStep = new LandFeatureGenerationStep("Forests", rng, tileCount / 5, tileCount / 2, (INovaGenerationStep)continentsStep);
+            var forestStep = new LandFeatureGenerationStep("Forests", rng, tileCount / 6, tileCount / 3, (INovaGenerationStep)continentsStep);
+            var hillStep = new LandFeatureGenerationStep("Hills", rng, tileCount / 6, tileCount / 3, (INovaGenerationStep)continentsStep);
 
             var mapGenerator = new Generator(settings.Width, settings.Height)
                 .ConfigAndGenerateSafe(gen =>
                 {
-                    gen.AddStep(continentsStep);
-                    gen.AddStep(forestStep);
+                    gen.AddSteps(continentsStep, forestStep, hillStep);
                 });
 
             var map = new WorldMap(settings.Width, settings.Height, tilesetFont);
@@ -41,6 +41,7 @@ namespace Novalia.Maps.Generation
 
             var continentsMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(((INovaGenerationStep)continentsStep).ComponentTag);
             var forestsMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(((INovaGenerationStep)forestStep).ComponentTag);
+            var hillMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(((INovaGenerationStep)hillStep).ComponentTag);
             foreach (var position in map.Positions())
             {
                 var template = continentsMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.Ocean;
@@ -50,6 +51,11 @@ namespace Novalia.Maps.Generation
                 {
                     var forest = entityFactory.CreateTerrainFeature(position, TerrainFeatureAtlas.Forest);
                     map.AddEntity(forest);
+                }
+                else if (hillMap[position])
+                {
+                    var hill = entityFactory.CreateTerrainFeature(position, TerrainFeatureAtlas.Hill);
+                    map.AddEntity(hill);
                 }
             }
 

@@ -11,6 +11,7 @@
         public const int Terrain_Ocean = 48;
 
         public const int Feature_Forest = 49;
+        public const int Feature_Hill = 51;
 
         // Units
         public const int Unit_CaveTroll = 4;
