@@ -6,7 +6,7 @@ namespace Novalia.Entities
 {
     public class EntityFactory : IEntityFactory
     {
-        public NovaEntity CreateUnit(Point position, UnitTemplate template, Guid empireId, Color empireColor)
+        public Unit CreateUnit(Point position, UnitTemplate template, Guid empireId, Color empireColor)
         {
             var unit = new Unit(
                 position,
@@ -26,7 +26,7 @@ namespace Novalia.Entities
             return unit;
         }
 
-        public NovaEntity CreateCity(Point position, string name, CityTemplate template, Guid empireId, Color empireColor)
+        public City CreateCity(Point position, string name, CityTemplate template, Guid empireId, Color empireColor)
         {
             var city = new City(
                 position,
@@ -38,6 +38,16 @@ namespace Novalia.Entities
                 template.Id);
 
             return city;
+        }
+
+        public TerrainFeature CreateTerrainFeature(Point position, TerrainFeatureTemplate template)
+        {
+            var feature = new TerrainFeature(
+                position,
+                template.Glyph,
+                template.Name,
+                template.Transparent);
+            return feature;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using GoRogue.MapGeneration;
-using Novalia.GameMechanics;
+using Novalia.Entities;
 using Novalia.Maps.Generation.Steps;
 using SadConsole;
 using SadRogue.Primitives;
@@ -15,33 +15,44 @@ namespace Novalia.Maps.Generation
             MapGenerationSettings settings,
             IFont tilesetFont,
             Point viewportSize,
-            IGenerator rng)
+            IGenerator rng,
+            IEntityFactory entityFactory)
         {
-            var iterations = (int)((settings.Width + settings.Height) * 1.5);
+            var tileCount = settings.Width * settings.Height;
+            var landmassIterations = (int)((settings.Width + settings.Height) * 1.5);
             GenerationStep continentsStep = settings.ContinentGeneratorStyle switch
             {
-                ContinentGeneratorStyle.Continents => new ContinentsGenerationStep(rng, iterations, 0.3F),
-                ContinentGeneratorStyle.Pangaea => new PangaeaGenerationStep(rng, iterations, 0.3F),
+                ContinentGeneratorStyle.Continents => new ContinentsGenerationStep(rng, landmassIterations, 0.3F),
+                ContinentGeneratorStyle.Pangaea => new PangaeaGenerationStep(rng, landmassIterations, 0.3F),
                 _ => throw new ArgumentException("Unsupported continent generator style."),
             };
+            var forestStep = new LandFeatureGenerationStep("Forests", rng, tileCount / 5, tileCount / 2, (INovaGenerationStep)continentsStep);
 
             var mapGenerator = new Generator(settings.Width, settings.Height)
                 .ConfigAndGenerateSafe(gen =>
                 {
-                    gen.AddSteps(continentsStep);
+                    gen.AddStep(continentsStep);
+                    gen.AddStep(forestStep);
                 });
-
-            var generatedMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(((INovaGenerationStep)continentsStep).ComponentTag);
 
             var map = new WorldMap(settings.Width, settings.Height, tilesetFont);
             map.DefaultRenderer.Surface.View = map.DefaultRenderer.Surface.View.ChangeSize(
                 viewportSize - map.DefaultRenderer.Surface.View.Size);
 
+            var continentsMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(((INovaGenerationStep)continentsStep).ComponentTag);
+            var forestsMap = mapGenerator.Context.GetFirst<ISettableGridView<bool>>(((INovaGenerationStep)forestStep).ComponentTag);
             foreach (var position in map.Positions())
             {
-                var template = generatedMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.Ocean;
+                var template = continentsMap[position] ? TerrainAtlas.Grassland : TerrainAtlas.Ocean;
                 map.SetTerrain(new Terrain(position, template.Glyph, template.Name, template.Walkable, template.Transparent));
+
+                if (forestsMap[position])
+                {
+                    var forest = entityFactory.CreateTerrainFeature(position, TerrainFeatureAtlas.Forest);
+                    map.AddEntity(forest);
+                }
             }
+
 
             return map;
         }

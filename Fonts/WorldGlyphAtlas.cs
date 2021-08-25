@@ -10,9 +10,11 @@
         public const int Terrain_MapEdge = 3;
         public const int Terrain_Ocean = 39;
 
+        public const int Feature_Forest = 40;
+
         // Units
         public const int Unit_CaveTroll = 4;
-        public const int Unit_Spearman = 40;
+        public const int Unit_Spearman = 48;
 
         // Improvements
         public const int City = 41;

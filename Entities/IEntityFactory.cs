@@ -5,7 +5,8 @@ namespace Novalia.Entities
 {
     public interface IEntityFactory
     {
-        NovaEntity CreateCity(Point position, string name, CityTemplate template, Guid empireId, Color empireColor);
-        NovaEntity CreateUnit(Point position, UnitTemplate template, Guid empireId, Color factionColor);
+        City CreateCity(Point position, string name, CityTemplate template, Guid empireId, Color empireColor);
+        Unit CreateUnit(Point position, UnitTemplate template, Guid empireId, Color factionColor);
+        TerrainFeature CreateTerrainFeature(Point position, TerrainFeatureTemplate template);
     }
 }

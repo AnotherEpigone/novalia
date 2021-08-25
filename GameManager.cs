@@ -116,7 +116,8 @@ namespace Novalia
                 setup.MapGenerationSettings,
                 tilesetFont,
                 GetViewportSizeInTiles(tilesetFont, defaultFont),
-                rng);
+                rng,
+                _entityFactory);
 
             for (int i = 0; i < 5; i++)
             {
