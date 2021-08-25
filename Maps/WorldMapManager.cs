@@ -330,10 +330,13 @@ namespace Novalia.Maps
                 remainingMovement -= movementCost;
                 if (remainingMovement > 0.01 && i < steps.Count - 1)
                 {
+                    var alpha = turns > 1
+                        ? 150
+                        : 210;
                     _map.AddEntity(new NovaEntity(
                         steps[i],
-                        new Color(Color.White, 100),
-                        WorldGlyphAtlas.Solid,
+                        new Color(Color.White, alpha),
+                        WorldGlyphAtlas.MovementPreviewDot,
                         "step highlight",
                         true,
                         true,

@@ -27,5 +27,6 @@
         public const int MovementPreview0 = 19;
         public const int MovementPreview10 = 29;
         public const int MovementPreview99plus = 38;
+        public const int MovementPreviewDot = 39;
     }
 }
