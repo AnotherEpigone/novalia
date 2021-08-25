@@ -8,16 +8,16 @@
         // Terrain
         public const int Terrain_Grassland = 2;
         public const int Terrain_MapEdge = 3;
-        public const int Terrain_Ocean = 39;
+        public const int Terrain_Ocean = 48;
 
-        public const int Feature_Forest = 40;
+        public const int Feature_Forest = 49;
 
         // Units
         public const int Unit_CaveTroll = 4;
-        public const int Unit_Spearman = 48;
+        public const int Unit_Spearman = 64;
 
         // Improvements
-        public const int City = 41;
+        public const int City = 50;
 
         // Gui
         public const int UnitBanner = 8;
