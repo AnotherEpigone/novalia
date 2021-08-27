@@ -28,12 +28,14 @@ namespace Novalia.Entities
             "FEATURE_FOREST",
             WorldGlyphAtlas.Feature_Forest,
             "Forest",
-            true);
+            true,
+            1);
 
         public static TerrainFeatureTemplate Hill => new TerrainFeatureTemplate(
             "FEATURE_HILL",
             WorldGlyphAtlas.Feature_Hill,
             "Hill",
-            true);
+            true,
+            1);
     }
 }

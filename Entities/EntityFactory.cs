@@ -46,7 +46,8 @@ namespace Novalia.Entities
                 position,
                 template.Glyph,
                 template.Name,
-                template.Transparent);
+                template.Transparent,
+                template.MovementCost);
             return feature;
         }
     }

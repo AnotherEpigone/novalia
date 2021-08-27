@@ -6,12 +6,12 @@ using System.Runtime.Serialization;
 
 namespace Novalia.Serialization.Maps
 {
-    public class TerrainFeatureJsonConverter : JsonConverter<Terrain>
+    public class TerrainFeatureJsonConverter : JsonConverter<TerrainFeature>
     {
-        public override void WriteJson(JsonWriter writer, Terrain value, JsonSerializer serializer) => serializer.Serialize(writer, (TerrainSerialized)value);
+        public override void WriteJson(JsonWriter writer, TerrainFeature value, JsonSerializer serializer) => serializer.Serialize(writer, (TerrainFeatureSerialized)value);
 
-        public override Terrain ReadJson(JsonReader reader, System.Type objectType, Terrain existingValue,
-                                        bool hasExistingValue, JsonSerializer serializer) => serializer.Deserialize<TerrainSerialized>(reader);
+        public override TerrainFeature ReadJson(JsonReader reader, System.Type objectType, TerrainFeature existingValue,
+                                        bool hasExistingValue, JsonSerializer serializer) => serializer.Deserialize<TerrainFeatureSerialized>(reader);
     }
 
     [DataContract]
@@ -21,8 +21,9 @@ namespace Novalia.Serialization.Maps
         [DataMember] public int Glyph;
         [DataMember] public string Name;
         [DataMember] public bool Transparent;
+        [DataMember] public int MovementCost;
 
-        public static implicit operator TerrainFeatureSerialized(Terrain terrain)
+        public static implicit operator TerrainFeatureSerialized(TerrainFeature terrain)
         {
             return new TerrainFeatureSerialized()
             {
@@ -30,6 +31,7 @@ namespace Novalia.Serialization.Maps
                 Glyph = terrain.Glyph,
                 Name = terrain.Name,
                 Transparent = terrain.IsTransparent,
+                MovementCost = terrain.MovementCost,
             };
         }
 
@@ -39,7 +41,8 @@ namespace Novalia.Serialization.Maps
                 serialized.Position,
                 serialized.Glyph,
                 serialized.Name,
-                serialized.Transparent);
+                serialized.Transparent,
+                serialized.MovementCost);
         }
     }
 }

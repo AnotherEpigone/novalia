@@ -100,15 +100,12 @@ namespace Novalia.Entities
             }
         }
 
-        public UnitMovementResult TryMove(Point target)
+        public UnitMovementResult TryMove(Point target, int movementCost)
         {
             if (RemainingMovement < 0.01)
             {
                 return UnitMovementResult.NoMovement;
             }
-
-            // TODO get the real movement cost
-            var movementCost = 1;
 
             if (!CurrentMap.WalkabilityView[target])
             {

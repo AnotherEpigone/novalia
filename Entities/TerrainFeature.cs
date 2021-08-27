@@ -16,13 +16,16 @@ namespace Novalia.Entities
             Point position,
             int glyph,
             string name,
-            bool transparent)
+            bool transparent,
+            int movementCost)
             : base(position, glyph, name, true, transparent, (int)MapEntityLayer.TERRAINFEATURES, Guid.NewGuid())
         {
             Glyph = glyph;
+            MovementCost = movementCost;
         }
 
         public int Glyph { get; }
+        public int MovementCost { get; }
 
         private string DebuggerDisplay
         {

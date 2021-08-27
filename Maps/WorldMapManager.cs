@@ -5,6 +5,7 @@ using Novalia.Fonts;
 using Novalia.GameMechanics.Combat;
 using SadConsole.Input;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 using System;
 using System.Linq;
 
@@ -17,6 +18,7 @@ namespace Novalia.Maps
     {
         private readonly NovaGame _game;
         private readonly WorldMap _map;
+        private readonly AStar _aStar;
 
         private Point _pathOverlayTarget;
         private bool _rmbDown;
@@ -30,6 +32,15 @@ namespace Novalia.Maps
             _map = map;
             _map.RightMouseButtonDown += Map_RightMouseButtonDown;
             _map.LeftMouseClick += Map_LeftMouseClick;
+
+            _aStar = new AStar(
+                _map.WalkabilityView,
+                Distance.Chebyshev,
+                new LambdaGridView<double>(
+                    _map.Width,
+                    _map.Height,
+                    p => (double)GetMovementCost(p) + 1d),
+                    1d);
         }
 
         public event EventHandler SelectionChanged;
@@ -247,6 +258,18 @@ namespace Novalia.Maps
             }
         }
 
+        private int GetMovementCost(Point target)
+        {
+            var cost = 1;
+            var feature = _map.GetEntityAt<TerrainFeature>(target);
+            if (feature != null)
+            {
+                cost += feature.MovementCost;
+            }
+
+            return cost;
+        }
+
         private void MoveSelectedUnit(Point target)
         {
             if (SelectedUnit == null)
@@ -254,7 +277,7 @@ namespace Novalia.Maps
                 return;
             }
 
-            var path = _map.AStar.ShortestPath(SelectedPoint, target);
+            var path = _aStar.ShortestPath(SelectedPoint, target);
             if (path == null)
             {
                 return;
@@ -262,7 +285,8 @@ namespace Novalia.Maps
 
             foreach (var step in path.Steps)
             {
-                var result = SelectedUnit.TryMove(step);
+                var movementCost = GetMovementCost(step);
+                var result = SelectedUnit.TryMove(step, movementCost);
                 switch (result)
                 {
                     case UnitMovementResult.NoMovement:
@@ -309,7 +333,7 @@ namespace Novalia.Maps
                 return;
             }
 
-            var path = _map.AStar.ShortestPath(SelectedPoint, target);
+            var path = _aStar.ShortestPath(SelectedPoint, target);
             if (path == null)
             {
                 return;
@@ -326,7 +350,7 @@ namespace Novalia.Maps
             for (int i = 0; i < steps.Count; i++)
             {
                 // TODO compute real movement cost
-                var movementCost = 1;
+                var movementCost = GetMovementCost(steps[i]);
                 remainingMovement -= movementCost;
                 if (remainingMovement > 0.01 && i < steps.Count - 1)
                 {
